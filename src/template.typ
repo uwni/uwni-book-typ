@@ -140,34 +140,32 @@
      )
  }
 
-  /* ---- Customization of Table ---- */
+  /* ---- Customization of Table&Image ---- */
   set figure(
     gap: lineskip,
     numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()),
   )
-
-  show figure: fig => {
-    show figure.caption: it => {
-      set align(left)
-      set par(leading: 0.65em, first-line-indent: 0pt)
+  
+  show figure.caption: it => {
+    set align(left)
+    set par(leading: lineskip, first-line-indent: 0pt)
       //\u{258C} -> "▌"
       //supplement -> Figure|Table
       //counter.display -> 1.1
-      sans[
-        \u{258C}#it.supplement
-        #context fig.counter.display().
-      ]
-      it.body
-    }
-    pad(fig, y: lineskip)
+    sans[
+      \u{258C}#it.supplement
+      #context counter(figure.where(kind: it.kind)).display().
+    ]
+    it.body
   }
-
+    
   set table(stroke: none, align: horizon + center)
 
   show figure.where(kind: table): set figure.caption(position: top)
 
   show figure.where(kind: image): set figure.caption(position: bottom)
 
+  set page(numbering: "I")
   /// Main body.
   body
 }
@@ -190,12 +188,6 @@
     )
     body
   }
-}
-
-#let abstract(lang, body) = {
-  set page(numbering: "I")
-  standalone(i18n.at(lang).abstract)
-  body
 }
 
 #let mainbody(body) = {

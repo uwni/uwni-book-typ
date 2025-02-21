@@ -68,20 +68,20 @@ which will be rendered as:
 
 #figure(
   caption: [A Mystery Bird] + lorem(20),
-  image("../../src/assets/titech.svg", width: 65%),
+  image("../../src/assets/titech.svg", width: 25%),
 )<tubame>
 
 
 == References<sec>
-// A reference to a element can be made by using the `@` symbol. For example, you can refer to the equation above by writing `@eq` which will be rendered as
+A reference to a element can be made by using the `@` symbol. For example, you can refer to the equation above by writing `@eq` which will be rendered as
 
-// @eq
+@eq
 
-// And you can refer to the figure above by writing `@tubame` which will be rendered as
+And you can refer to the figure above by writing `@tubame` which will be rendered as
 
-// @tubame
+@tubame
 
-// and you can refer to a chapter by writing `@chap` which will be rendered as
+and you can refer to a chapter by writing `@chap` which will be rendered as
 
-// @chap
-// @sec
+@chap
+@sec

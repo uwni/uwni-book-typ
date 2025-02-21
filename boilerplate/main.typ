@@ -1,5 +1,6 @@
 #import "packages.typ": *
 #show: isct_thesis
+
 #show math.pi: math.upright
 
 /// make the title page
@@ -9,9 +10,9 @@
 #outline()
 
 /// make the main text
-#show: abstract
 #include "chapters/abs.typ"
 
+// this is necessary before starting your main text
 #show: mainbody
 #include "chapters/1.intro.typ"
 #include "chapters/2.method.typ"

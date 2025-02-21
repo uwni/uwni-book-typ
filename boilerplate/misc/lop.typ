@@ -1,2 +1,2 @@
-#import "../packages.typ": list_of_pub
-#list_of_pub
+#import "../packages.typ": standalone
+#standalone[List of publications]

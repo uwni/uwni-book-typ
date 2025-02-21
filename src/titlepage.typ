@@ -106,8 +106,8 @@
     margin: (top: 3.5cm)
   )
 
-  set par(first-line-indent: 0pt)
-  set text(13.75pt, weight: 450)
+  set par(first-line-indent: 0pt, leading: 1em, spacing: 1em)
+  set text(13.75pt, weight: 450, font: config.serif_font, lang: lang)
   set align(right)
 
   let large = text.with(16.5pt)

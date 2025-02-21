@@ -1,3 +1,5 @@
+#import "../packages.typ": * 
+#standalone[Abstract]
 
 #lorem(100)
 

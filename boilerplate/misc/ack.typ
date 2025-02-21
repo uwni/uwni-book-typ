@@ -1,3 +1,3 @@
-#import "../packages.typ": acknowledgement
+#import "../packages.typ": standalone
 
-#acknowledgement
+#standalone[acknowledgements]

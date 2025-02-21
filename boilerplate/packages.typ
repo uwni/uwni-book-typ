@@ -6,21 +6,19 @@
 #import "../lib.typ": *
 #let (
   isct_thesis,
-  abstract,
-  appendix,
-  acknowledgement,
-  list_of_pub,
   titlepage,
+  standalone,
   mainbody,
+  appendix
 ) = config_isct(
   // ["en"|"ja"]
   lang: "en",
   title: (
     ja: text(lang: "ja")[
-      錬金術的手法を用いたゴブリンの肉体改造に関する研究
+       傅里葉分析筆記  
     ],
     en: [
-      Research on Goblin Body Modification Using Alchemical Methods
+      Fourier Analysis Note
     ],
   ),
   // author information

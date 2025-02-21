@@ -43,10 +43,8 @@
       department,
       draft,
     ),
-    abstract: abstract.with(lang),
     appendix: appendix(lang),
-    acknowledgement: standalone(i18n.at(lang).ack),
-    list_of_pub: standalone(i18n.at(lang).lop),
+    standalone: standalone,
     sans: text.with(font: i18n.at(lang).sans_font),
     mainbody: mainbody,
   )
