@@ -1,0 +1,13 @@
+[package]
+name = "isct-thesis"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["wukyu"]
+license = "MPL-2.0"
+description = "A template of thesis for my personal usage"
+categories = ["thesis"]
+
+[template]
+path = "boilerplate"
+entrypoint = "main.typ"
+thumbnail = "thumbnail.png"
