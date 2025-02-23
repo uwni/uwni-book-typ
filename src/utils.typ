@@ -95,3 +95,24 @@
 #let heavyrule = table.hline.with(stroke: 0.08em)
 #let midrule = table.hline.with(stroke: 0.05em)
 #let vline = table.vline(stroke: 0.05em)
+
+#let w-full-eq(eq) = {
+  eq
+    .body
+    .children
+    .split(linebreak())
+    .map([].func())
+    .zip((
+      [],
+      {
+        let c = counter(math.equation)
+        c.step()
+        h(1em)
+        context c.display()
+      },
+    ))
+    .map(array.join)
+    .map(math.equation.with(block: true, numbering: none))
+    .map(box)
+    .join(((h(1fr),) * 2).join(linebreak()))
+}

@@ -1,29 +1,34 @@
+/// lib.typ
 /// entrypoint for the library
 
 // re-export the following modules
 #import "src/utils.typ": *
 
 #let config_isct(
-  lang: "en",
-  title: (ja: [], en: []),
+  config: "en",
+  title: (ja: [], zh:[], en: []),
   author: "[Author]",
+  department: "[Department]",
   date: datetime.today(),
-  degree: "[degree]",
-  major: "[major]",
-  supervisor: "[supervisor]",
-  department: "[department]",
   draft: false,
   two_sided: false,
   title_style: "[title_style]",
 ) = {
+  
+  let config = if type(config) == str {
+    import "src/config.typ": config as default_config
+    default_config.at(config, default: [])
+  } else if type(config) == dictionary {
+    config
+  }
+  
   import "src/template.typ": *
   import "src/titlepage.typ": titlepage
-  import "src/i18n.typ": *
 
   // export the following functions
   (
     isct_thesis: body => template(
-      lang,
+      config,
       title,
       author,
       date,
@@ -33,19 +38,15 @@
     ),
     titlepage: titlepage(
       style: title_style,
-      lang,
+      config,
       title,
       author,
-      date,
-      degree,
-      major,
-      supervisor,
       department,
+      date,
       draft,
     ),
-    appendix: appendix(lang),
+    appendix: appendix(config),
     standalone: standalone,
-    sans: text.with(font: i18n.at(lang).sans_font),
     mainbody: mainbody,
   )
 }

@@ -1,8 +1,7 @@
 #import "utils.typ": *
-#import "i18n.typ": *
 
 #let template(
-  lang,
+  config,
   title,
   author,
   date,
@@ -11,10 +10,16 @@
   body,
 ) = {
   ///utilities
-  let i18n = i18n.at(lang)
-  let serif = text.with(font: i18n.serif_font)
-  let sans = text.with(font: i18n.sans_font)
-
+  let (
+    serif_font,
+    sans_font,
+    math_font,
+    mono_font,
+    lang,
+  ) = config
+  
+  let serif = text.with(font: serif_font)
+  let sans = text.with(font: sans_font)
   /// text properties for the main body
   let main_size = 11pt
   let lineskip = 0.65em
@@ -45,7 +50,7 @@
     margin: (top: 3cm, bottom: 2.5cm),
     //for draft
     background: if draft {
-      watermark(text(25pt, fill: rgb("#e8eaf1"), sans(upper(i18n.draft))))
+      watermark(text(25pt, fill: rgb("#e8eaf1"), sans(upper(draft))))
     },
     header: context if not is_starting() and current_chapter() != none {
       let (number, body) = current_chapter()
@@ -56,25 +61,25 @@
   )
 
   // set the font for main texts
-  set text(main_size, font: i18n.serif_font, weight: default_weight, lang: lang)
+  set text(main_size, font: serif_font, weight: default_weight, lang: lang, region: config.at("region", default: none))
 
   // set math equation font
-  show math.equation: set text(font:"Libertinus Math", weight: default_weight)
+  show math.equation: set text(font: math_font, weight: default_weight)
   
   set math.equation(numbering: num => numbering("(1.1)", counter(heading).get().first(), num))
 
   // set paragraph style
   set par(leading: lineskip, spacing: parskip, first-line-indent: 2em, justify: true)
-  show raw: set text(font: "Libertinus Mono")
+  show raw: set text(font: mono_font, weight: "regular")
 
   set heading(numbering: "1.1")
-  set heading(supplement: it => if it.depth == 1 [Chapter] else [Section]) if i18n.lang == "en"
-  set heading(supplement: "第") if i18n.lang == "ja"
+  set heading(supplement: it => if it.depth == 1 [Chapter] else [Section]) if lang == "en"
+  set heading(supplement: "第") if lang == "ja"
 
 
   /* ---- Customization of Chap. Heading ---- */
   show heading.where(level: 1): it => {
-    set text(heading1_size, weight: "semibold", font: i18n.sans_font)
+    set text(heading1_size, weight: "semibold", font: sans_font)
     set par(spacing: 1.2em, leading: 0.65em, first-line-indent: 0pt, justify: false)
     /// for standalone chapters
     counter(math.equation).update(0)
@@ -93,8 +98,8 @@
         {
           let num = text(1.5em, counter(heading).display(it.numbering))
           set text(weight: "medium")
-          if i18n.lang == "en" [#smallcaps(it.supplement)~#num] 
-          else if i18n.lang == "ja" [第 #num 章]
+          if lang == "en" [#smallcaps(it.supplement)~#num] 
+          else if lang == "ja" [第 #num 章]
         }
         v(0.25em)
         upper(it.body)
@@ -104,7 +109,7 @@
 
   show heading.where(level: 2): it => {
     show: block.with(spacing: heading2_size)
-    set text(heading2_size, weight: "medium", font: i18n.sans_font)
+    set text(heading2_size, weight: "medium", font: sans_font)
     v(1em)
     it
   }
@@ -112,13 +117,12 @@
 
   show heading.where(level: 3): it => {
     show: block.with(spacing: heading3_size)
-    set text(weight: "regular", font: i18n.sans_font)
+    set text(weight: "regular", font: sans_font)
     v(0.5em)
     it.body
   }
+  
   /* ---- Customization of ToC ---- */
-
-
   set outline(indent: auto, depth: 2)
   
   show outline: it => {
@@ -130,7 +134,7 @@
   }
 
   show outline.entry.where(level: 1): it => {
-    set text(font: i18n.sans_font)
+    set text(font: sans_font)
     set block(above: 1.25em)
     let prefix = if it.element.numbering != none { it.prefix() }
     let body = upper(it.body() + h(1fr) + it.page())
@@ -165,6 +169,9 @@
 
   show figure.where(kind: image): set figure.caption(position: bottom)
 
+  /*-- emph --*/
+  show emph: sans.with(weight: 500)
+
   set page(numbering: "I")
   /// Main body.
   body
@@ -172,8 +179,8 @@
 
 #let standalone(..args) = heading(supplement: none, numbering: none, ..args)
 
-#let appendix(lang) = body => {
-  let (supplement, numbering: _numbering) = i18n.at(lang).appendix
+#let appendix(config) = body => {
+  let (supplement, numbering: _numbering) = config.appendix
   context {
     let offset = counter(heading).get().first()
     set heading(
