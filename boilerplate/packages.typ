@@ -15,10 +15,10 @@
   config: "zh",
   title: (
     zh: [
-       傅里葉分析筆記  
+       分析學補遺  
     ],
     en: [
-      Fourier Analysis Note
+      Analysis Note
     ],
   ),
   // author information
@@ -39,3 +39,4 @@
 
 #import "@preview/cetz:0.3.2"
 #import "@preview/cetz-plot:0.1.1": plot, chart
+#import "@preview/equate:0.3.0"

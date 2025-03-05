@@ -17,7 +17,7 @@
     mono_font,
     lang,
   ) = config
-  
+
   let serif = text.with(font: serif_font)
   let sans = text.with(font: sans_font)
   /// text properties for the main body
@@ -64,8 +64,8 @@
   set text(main_size, font: serif_font, weight: default_weight, lang: lang, region: config.at("region", default: none))
 
   // set math equation font
-  show math.equation: set text(font: math_font, weight: default_weight)
-  
+  show math.equation: set text(font: math_font, weight: default_weight, features: ("cv01",))
+
   set math.equation(numbering: num => numbering("(1.1)", counter(heading).get().first(), num))
 
   // set paragraph style
@@ -98,8 +98,7 @@
         {
           let num = text(1.5em, counter(heading).display(it.numbering))
           set text(weight: "medium")
-          if lang == "en" [#smallcaps(it.supplement)~#num] 
-          else if lang == "ja" [第 #num 章]
+          if lang == "en" [#smallcaps(it.supplement)~#num] else if lang == "ja" [第 #num 章]
         }
         v(0.25em)
         upper(it.body)
@@ -117,14 +116,14 @@
 
   show heading.where(level: 3): it => {
     show: block.with(spacing: heading3_size)
-    set text(weight: "regular", font: sans_font)
+    set text(weight: 500, font: sans_font)
     v(0.5em)
     it.body
   }
-  
+
   /* ---- Customization of ToC ---- */
   set outline(indent: auto, depth: 2)
-  
+
   show outline: it => {
     set page(numbering: "I")
     set par(leading: 1em, spacing: 0.5em)
@@ -139,30 +138,30 @@
     let prefix = if it.element.numbering != none { it.prefix() }
     let body = upper(it.body() + h(1fr) + it.page())
     link(
-        it.element.location(),
-        it.indented(prefix, body),
-     )
- }
+      it.element.location(),
+      it.indented(prefix, body),
+    )
+  }
 
   /* ---- Customization of Table&Image ---- */
   set figure(
     gap: lineskip,
     numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()),
   )
-  
+
   show figure.caption: it => {
     set align(left)
     set par(leading: lineskip, first-line-indent: 0pt)
-      //\u{258C} -> "▌"
-      //supplement -> Figure|Table
-      //counter.display -> 1.1
+    //\u{258C} -> "▌"
+    //supplement -> Figure|Table
+    //counter.display -> 1.1
     sans[
       \u{258C}#it.supplement
       #context counter(figure.where(kind: it.kind)).display().
     ]
     it.body
   }
-    
+
   set table(stroke: none, align: horizon + center)
 
   show figure.where(kind: table): set figure.caption(position: top)
@@ -170,7 +169,7 @@
   show figure.where(kind: image): set figure.caption(position: bottom)
 
   /*-- emph --*/
-  show emph: sans.with(weight: 500)
+  show emph: sans.with(weight: 400)
 
   set page(numbering: "I")
   /// Main body.
