@@ -8,6 +8,7 @@
     mono_font: "IBM Plex Mono",
     draft: "draft",
     date_format: "[month repr:long] [year]",
+    proof: [_Proof._],
   ),
   zh: (
     lang: "zh",
@@ -18,8 +19,10 @@
     serif_font: ((name: "New Computer Modern", covers: "latin-in-cjk"), "尙古明體SC"),
     math_font: ("New Computer Modern Math", "尙古明體SC"),
     mono_font: "IBM Plex Mono",
+    italic_font: (name: "Zhuque Fangsong (technical preview)", covers: "latin-in-cjk"),
     draft: "稿",
     date_format: "[year] 年 [month repr:numerical] 月",
+    proof: [_證明_],
   ),
   ja: (
     lang: "ja",

@@ -1,4 +1,5 @@
 #import "utils.typ": *
+#import "../packages.typ": *
 
 #let template(
   config,
@@ -15,11 +16,9 @@
     sans_font,
     math_font,
     mono_font,
+    italic_font,
     lang,
   ) = config
-
-  let serif = text.with(font: serif_font)
-  let sans = text.with(font: sans_font)
   /// text properties for the main body
   let main_size = 11pt
   let lineskip = 0.65em
@@ -29,7 +28,11 @@
   let heading3_size = 1.2em
 
   // for the "book" weights of NCM font
-  let default_weight = "regular"
+  let default_weight = 450
+
+  let serif = text.with(font: serif_font)
+  let sans = text.with(font: sans_font)
+  let italic = text.with(font: italic_font)
 
   /// Set the document's basic properties.
   let author_en = if type(author) == dictionary {
@@ -63,11 +66,20 @@
   // set the font for main texts
   set text(main_size, font: serif_font, weight: default_weight, lang: lang, region: config.at("region", default: none))
 
-  // set math equation font
+  /*-- Math Related --*/
   show math.equation: set text(font: math_font, weight: default_weight, features: ("cv01",))
 
   set math.equation(numbering: num => numbering("(1.1)", counter(heading).get().first(), num))
-
+  show math.equation: it => {
+    if it.block {
+      if it.has("label") { it } else [
+        #counter(math.equation).update(v => if v == 0 { 0 } else { v - 1 })
+        #math.equation(it.body, block: true, numbering: none)#label("")
+      ]
+    } else {
+      h(0.25em, weak: true) + it + h(0.25em, weak: true)
+    }
+  }
   // set paragraph style
   set par(leading: lineskip, spacing: parskip, first-line-indent: 2em, justify: true)
   show raw: set text(font: mono_font, weight: "regular")
@@ -75,7 +87,7 @@
   set heading(numbering: "1.1")
   set heading(supplement: it => if it.depth == 1 [Chapter] else [Section]) if lang == "en"
   set heading(supplement: "第") if lang == "ja"
-
+  set heading(supplement: "第") if lang == "zh"
 
   /* ---- Customization of Chap. Heading ---- */
   show heading.where(level: 1): it => {
@@ -98,7 +110,9 @@
         {
           let num = text(1.5em, counter(heading).display(it.numbering))
           set text(weight: "medium")
-          if lang == "en" [#smallcaps(it.supplement)~#num] else if lang == "ja" [第 #num 章]
+          if lang == "en" [#smallcaps(it.supplement)~#num] else if lang == "ja" [第 #num 章] else if (
+            lang == "zh"
+          ) [第 #num 章]
         }
         v(0.25em)
         upper(it.body)
@@ -109,16 +123,17 @@
   show heading.where(level: 2): it => {
     show: block.with(spacing: heading2_size)
     set text(heading2_size, weight: "medium", font: sans_font)
-    v(1em)
-    it
+    v(main_size)
+    counter(heading).display(it.numbering)
+    h(11pt)
+    it.body
   }
-
 
   show heading.where(level: 3): it => {
     show: block.with(spacing: heading3_size)
     set text(weight: 500, font: sans_font)
-    v(0.5em)
-    it.body
+    v(0.5 * main_size)
+    [\u{258C}#it.body]
   }
 
   /* ---- Customization of ToC ---- */
@@ -169,7 +184,7 @@
   show figure.where(kind: image): set figure.caption(position: bottom)
 
   /*-- emph --*/
-  show emph: sans.with(weight: 400)
+  show emph: italic
 
   set page(numbering: "I")
   /// Main body.

@@ -52,10 +52,8 @@
     return none
   }
   let chapter = chapter.last()
-  let number = counter(heading).display(
-    (chap_idx, ..) => if chap_idx > 0 {chap_idx}
-  )
-  
+  let number = counter(heading).display((chap_idx, ..) => if chap_idx > 0 { chap_idx })
+
   let body = chapter.body
   // styling it with numbering
 
@@ -96,7 +94,7 @@
 #let midrule = table.hline.with(stroke: 0.05em)
 #let vline = table.vline(stroke: 0.05em)
 
-#let w-full-eq(eq) = {
+#let multi-row(eq) = {
   eq
     .body
     .children
@@ -105,10 +103,12 @@
     .zip((
       [],
       {
-        let c = counter(math.equation)
-        c.step()
-        h(1em)
-        context c.display()
+        if (eq.has("label")) {
+          let c = counter(math.equation)
+          c.step()
+          h(1em)
+          context c.display()
+        }
       },
     ))
     .map(array.join)

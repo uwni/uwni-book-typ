@@ -2,7 +2,8 @@
 /// entrypoint for the library
 
 // re-export the following modules
-#import "src/utils.typ": *
+#import "src/utils.typ"
+#import "src/environments.typ"
 
 #let config_isct(
   config: "en",

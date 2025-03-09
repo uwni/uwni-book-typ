@@ -55,10 +55,8 @@
 
       #v(1fr)
    
-      Submitted to the\
-      #department \
-      #large(smallcaps[Institute of Science Tokyo])\
-      in partial fulfilment of the requirements for the degree of\
+      分析補遺
+      代數補遺
     ]
 
     #v(1fr)
