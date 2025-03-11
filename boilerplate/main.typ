@@ -1,16 +1,16 @@
 #import "packages.typ": *
-#show: isct_thesis
-
-#show math.pi: math.upright
 
 /// make the title page
 #titlepage
 
-/// make the abstract
-#outline()
+#show: isct_thesis
+#show math.pi: math.upright
 
 /// make the main text
 #include "chapters/abs.typ"
+
+/// make the abstract
+#outline()
 
 // this is necessary before starting your main text
 #show: mainbody

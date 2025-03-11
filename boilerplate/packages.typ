@@ -28,7 +28,7 @@
   // set to true to enable draft watermark, so that you can prevent from submitting a draft version
   draft: false,
   // set to true to enable two-sided layout
-  two_sided: false,
+  two_sided: true,
   // "modern"|"classic"
   title_style: "book",
 )
@@ -37,6 +37,6 @@
 #import "@preview/roremu:0.1.0"
 #import "@preview/physica:0.9.4"
 
-#import "@preview/cetz:0.3.2"
+#import "@preview/cetz:0.3.4"
 #import "@preview/cetz-plot:0.1.1": plot, chart
 #import "@preview/equate:0.3.0"

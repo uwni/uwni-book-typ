@@ -20,6 +20,7 @@
 
   let large = text.with(16.5pt)
   let title_text = text.with(22pt, font: title_font, weight: 600)
+  let title_cn_text = text.with(32pt, font: "FZZJ-XHLSHUJF", weight: 600)
 
   let author_en = if type(author) == dictionary {
     author.at("en")
@@ -40,7 +41,7 @@
   [
     #par(justify: false)[
       #title_text(title.en, lang: "en")\
-      #title_text(title.at(lang), lang: lang)
+      #title_cn_text(title.at(lang), lang: lang)
     ]
 
     #v(1fr)
@@ -74,4 +75,5 @@
   (
     "book": book_title(..args),
   ).at(style)
+  pagebreak(to: "odd")
 }

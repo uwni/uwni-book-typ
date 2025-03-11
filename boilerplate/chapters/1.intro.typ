@@ -4,8 +4,6 @@
 #import environments: *
 
 = 辯理
-
-
 $R$ 爲二元謂語, $phi$ 是公式, $x$ 爲變元, $a$ 爲變元或常符, 對於一類常見的公式 $forall x (x R a -> phi)$, 可以簡寫爲 $(forall x R a) phi$.
 
 
@@ -20,14 +18,14 @@ $
 == 商集
 
 == 勢
-集 $S$ 之元之數, 謂之*勢*, 記曰 $abs(S)$. 例如 $abs({1, 2, 3}) = 3$. 若 $(exists n in NN^*)abs(S) = n$, 則稱 $S$ 爲*有限集*, 否則爲*無限集*, 如分數集, 實數集等. 無限集中, $abs(NN) = alef_0$ 若勢與自然數集之勢相等, 則稱之*可數集*, 否則爲*不可數集*. 例如分數集爲可數集, 實數集爲不可數集. 有限集之勢皆爲自然數, 且 $abs(emptyset) = 0$. 何言其勢等?
+集 $S$ 之元之數, 謂曰*勢*, 記曰 $abs(S)$. 例如 $abs({1, 2, 3}) = 3$. 若 $(exists n in NN^*)abs(S) = n$, 則稱 $S$ 爲*有限集*, 否則爲*無限集*, 如分數集, 實數集等. 無限集中, $abs(NN) = alef_0$ 若勢與自然數集之勢等, 則稱之*可數集*, 否則爲*不可數集*. 例如分數集爲可數集, 實數集爲不可數集. 有限集之勢皆爲自然數, 且 $abs(emptyset) = 0$. 何言其勢等?
 $
-  S tilde.equiv T <=> (exists f: S -> T) f "is bijection"
+  S tilde.equiv T <=> (exists f: S -> T) f "對射也"
 $
-此計數之抽象也, 若有 $S = {suit.club, suit.diamond, suit.heart, suit.spade}$ 集, 數以一二三四而知其勢乃 $4$ 也. 編號計數法實爲一雙射: $S -> NN^*_(<=4)$ 也. 無限集也, 雖數不盡其元, 猶可較也. 若有集可令其元一一對應於自然數者, 正如數盡自然數之勢也.
+此計數之抽象也, 若有 $S = {suit.club.stroked, suit.diamond.stroked, suit.heart.stroked, suit.spade.stroked}$ 集, 數以一二三四而知其勢乃 $4$ 也. 編號計數法實乃一雙射: $S -> NN^*_(<=4)$ 也. 無限集也, 雖數不盡其元, 猶可較也. 若有集可令其元一一對應於自然數者, 正如數盡自然數之勢也.
 
 == 幂集
-集 $S$ 全子之所聚也, 號曰冪集, 記曰 $2^S$. 例如 $2^{1, 2} = {{}, {1}, {2}, {1, 2}}$. $S$ 之冪集之勢 $abs(2^S) = 2^abs(S)$, 請以歸納法證明之:
+集 $S$ 全子之所聚也, 號曰冪集, 記曰 $2^S$. 例如 $2^{1, 2} = {{}, {1}, {2}, {1, 2}}$. $S$ 冪集之勢 $abs(2^S) = 2^abs(S)$ 也, 請以歸納法證明之:
 $abs(2^emptyset) = abs({emptyset}) = 1$
 ,令
 $abs(2^S) = 2^abs(S)$,
@@ -49,7 +47,7 @@ $ max (union.big_(S in cal(S)) S) = max {max S | S in cal(S)} $
   (forall t_1 in T_1)(forall t_2 in T_2)\ t_1 <= max T_1 <= max{max T_1, max T_2} and t_2 <= max T_2 <= max{max T_1, max T_2}
 $)
 
-- 有限偏序集不常有最大最小元. 例如 $T = {suit.club, suit.diamond, suit.heart}$, 偏序關係 $prec.eq = id$. 所以無最大及最小元者, 不可相較而已.
+- 有限偏序集不常有最大最小元. 例如 $T = {suit.club.stroked, suit.diamond.stroked, suit.heart.stroked}$, 偏序關係 $prec.eq = id$. 所以無最大及最小元者, 不可相較而已.
 - 有限全序集常有最大最小元. 請擬以歸納證明之
   + $abs(S) = 1$, $S$ 之元唯一, 即爲最大最小元也.
   + $abs(S) = 2$, 設 $S = {t_1, t_2}$, 其最元得計算如下

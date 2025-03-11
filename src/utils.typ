@@ -30,7 +30,7 @@
 #let fignote(body) = {
   set align(left)
   set par(leading: 0.65em)
-  grid(columns: 2)[_Note._~][#body]
+  grid(columns: 2)[_註._][#body]
 }
 
 // check if the calling page is the first page of a new chapter
@@ -44,50 +44,42 @@
   false
 }
 
+#let is_even_page() = calc.even(counter(page).get().at(0))
+
+
 // none -> it is not already yet, e.g. titlepage
 #let current_chapter() = {
   let chapter = query(heading.where(level: 1).before(here()))
   // no chapter founded
-  if chapter == () {
+  chapter = if chapter == () {
     return none
+  } else {
+    chapter.last()
   }
-  let chapter = chapter.last()
-  let number = counter(heading).display((chap_idx, ..) => if chap_idx > 0 { chap_idx })
 
-  let body = chapter.body
+  let section = query(heading.where(level: 2).before(here()))
+  // no section founded
+  section = if section == () {
+    none
+  } else {
+    section.last()
+  }
+
+  let index = counter(heading).get()
+
+  let body = (chapter.body, section.body)
   // styling it with numbering
 
-  (number: number, body: body)
+  (index: index, body: body)
 }
 
 #let current_page() = counter(page).display(page.numbering)
 
 #let color_palette = (
-  c: (
-    red: rgb("e97979"),
-    orange: rgb("f8b488"),
-    yellow: rgb("edc669"),
-    green: rgb("81bd5f"),
-    deep_green: rgb("5aa36c"),
-    gray: rgb("979797"),
-  ),
-  a: (
-    red: rgb("f02b2b"),
-    orange: rgb("ff8732"),
-    yellow: rgb("f7bb25"),
-    green: rgb("69b72a"),
-    deep_green: rgb("2c9a4a"),
-    gray: rgb("707070"),
-  ),
-  bg: (
-    deep: rgb("e8eaf1"),
-    light: rgb("f2f4f9"),
-  ),
-  primary: rgb("1c3177"),
-  secondary: rgb("#7f96c2"),
+  primary: blue,
+  secondary: rgb("c6e6e8"),
+  tertiary: rgb("dfecd5"),
 )
-
-
 
 /* Table tools */
 #let heavyrule = table.hline.with(stroke: 0.08em)
@@ -116,3 +108,12 @@
     .map(box)
     .join(((h(1fr),) * 2).join(linebreak()))
 }
+
+#let title_num_art(content) = {
+  set text(size: 5em)
+  let c = str(content)
+  place(text(c, stroke: blue + .35em))
+  text(c, fill: white)
+}
+
+#title_num_art("篇")
