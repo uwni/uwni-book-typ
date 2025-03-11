@@ -109,11 +109,23 @@
     .join(((h(1fr),) * 2).join(linebreak()))
 }
 
-#let title_num_art(content) = {
-  set text(size: 5em)
-  let c = str(content)
-  place(text(c, stroke: blue + .35em))
-  text(c, fill: white)
-}
+#let smart_figure(it, margin_ext: 0pt) = layout(((width, height)) => {
+  let content_width = measure(width: width, height: height, it.body).width
+  set align(if is_even_page() { right } else { left })
 
-#title_num_art("篇")
+  // overflowed
+  if content_width >= width {
+    set figure.caption(position: bottom)
+    it
+  } else {
+    let spacing = 1em
+    stack(
+      dir: if is_even_page() { rtl } else { ltr },
+      spacing: spacing,
+      it.body,
+      block(width: width - content_width + margin_ext - spacing, it.caption),
+    )
+  }
+})
+
+#show figure: smart_figure

@@ -12,7 +12,7 @@
   ),
   zh: (
     lang: "zh",
-    region: "TW",
+    region: "CN",
     appendix: (supplement: "附錄", numbering: "A.1"),
     title_font: ((name: "Lexend", covers: regex("[\u0000-\u2019]")), "尙古黑體SC"),
     sans_font: ((name: "Lexend", covers: regex("[\u0000-\u2019]")), "尙古黑體SC"),

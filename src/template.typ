@@ -27,7 +27,8 @@
   let heading2_size = 1.2em
   let heading3_size = 1.2em
 
-  let margin_ext = 2cm
+  let margin_ext = 2.5cm
+  let margin = 2cm
 
   // for the "book" weights of NCM font
   let default_weight = 450
@@ -53,7 +54,7 @@
   set page(
     // explicitly set the paper
     paper: "a4",
-    margin: (top: 3cm, bottom: 2.5cm, inside: 2.5cm, outside: 2.5cm + margin_ext),
+    margin: (top: 3cm, bottom: 2.5cm, inside: margin, outside: margin + margin_ext),
     //for draft
     background: if draft {
       watermark(text(25pt, fill: rgb("#e8eaf1"), sans(upper(draft))))
@@ -69,26 +70,29 @@
       let sect_prefix = [
         #if sect_idx > 0 {
           semi[節#numbering("1.1", chap_idx, sect_idx)] + h(1em, weak: true)
+          sect
         }
-        #sect
       ]
 
       if lang == "zh" {
+        let page_num = semi(current_page())
+        let skip = h(margin_ext - measure(page_num).width, weak: true)
         sans[
           #if two_sided {
             if is_even_page() [
-              #place(left + bottom, dx: -margin_ext, semi(current_page())) #sect_prefix
+              #h(-margin_ext)#page_num#skip#chap_prefix
             ] else [
-              #h(1fr) #chap_prefix #place(right + bottom, dx: margin_ext, semi(current_page()))
+              #set align(right)
+              #sect_prefix#skip#page_num#h(-margin_ext)
             ]
           } else [
             #chap_prefix
             #h(1fr)
-            #semi(current_page())
+            #page_num
           ]
         ]
       } else {
-        sans[§#chap_prefix #h(1fr) #current_page()]
+        sans[#chap_prefix #h(1fr) #page_num]
       }
     },
     footer: context if is_starting() {
@@ -105,7 +109,13 @@
   counter(page).update(1)
 
   // set the font for main texts
-  set text(main_size, font: serif_font, weight: default_weight, lang: lang, region: config.at("region", default: none))
+  set text(
+    size: main_size,
+    font: serif_font,
+    weight: default_weight,
+    lang: lang,
+    region: config.at("region", default: none),
+  )
 
   /*-- Math Related --*/
   show math.equation: set text(font: math_font, weight: default_weight, features: ("cv01",))
@@ -215,6 +225,7 @@
     gap: lineskip,
     numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()),
   )
+  set figure.caption(separator: text(font: "Zapf Dingbats")[❘~])
 
   show figure.caption: it => {
     set align(left)
@@ -226,7 +237,7 @@
       #it.supplement
       #context counter(figure.where(kind: it.kind)).display()
     ]
-    text(font: "Zapf Dingbats")[❘~]
+    it.separator
     it.body
   }
 
@@ -234,10 +245,13 @@
 
   show figure.where(kind: table): set figure.caption(position: top)
 
-  show figure.where(kind: image): set figure.caption(position: bottom)
+  show figure.where(kind: image): smart_figure.with(margin_ext: margin_ext)
 
   /*-- emph --*/
   show emph: italic
+
+  show "。": "．"
+  show "，": "、"
 
   /// Main body.
   body
