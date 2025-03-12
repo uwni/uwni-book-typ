@@ -1,9 +1,10 @@
-#import "../packages.typ": *
-#import "../defs.typ": *
-#import utils: *
+#import "../../packages.typ": *
+#import "../../defs.typ": *
+#import components: *
 #import environments: *
 
 = 數域 <chap>
+
 == 換元術
 夫換元之術者，分析學之魂魄也。以之解方程，求積分，皆有其用。且其法之簡明，使人易於理解。換元本爲函數之複合，請例以如下。求函數 $f(x) = 1-x^2$ 之最大值。作換元 $g: x |-> cos t$ 得
 
@@ -62,9 +63,9 @@ $
   <=> 2 divides p^2 <=> 2 divides p <=> (exists p') p = 2 p' <=>
   2p'^2 = q^2 <=> 2 divides q^2 <=> 2 divides q
 $
-$p$ 與 $q$ 皆偶數，而 $p \/ q$ 非約式也。故知 $l$ 非分數之屬也。以Ἵππασος之初覺爲嚆矢。分數之不全始昭於天下也，此所以分數不可以度量也。
+$p$ 與 $q$ 皆偶數，而 $p \/ q$ 非約式也。故知 $l$ 非分數之屬也。以Ἵππασος之初覺爲嚆矢，分數之遺缺始昭於天下矣。此所以分數不可以度量也。
 
-另察一例，設集
+另察一例，有集
 #let QQ2 = $QQ_(<sqrt(2))$
 $
   QQ2 := {x in QQ | x^2 < 2}
@@ -155,7 +156,7 @@ $
 === 檢根術
 
 == 常數 $eu$
-常數 $eu$，或曰*自然底數*，最初見於複利率之計算。凡 $n > 0$ 定義曰
+常數 $eu$，或曰*自然底數*，初見於複利率之計算。凡 $n > 0$ 定義曰
 $ eu := lim_(n->oo) a_n = lim_(n -> oo) (1+1 / n)^n $
 此處唯需證明 RHS 收斂。請道其證法
 $
@@ -207,8 +208,8 @@ $
   )
 
   plot.plot(
-    size: (12, 8),
-    y-min: 1,
+    size: (7, 6),
+    y-min: 1.3,
     y-max: 3,
     {
       let domain = range(1, 21)
@@ -218,7 +219,7 @@ $
   )
 })
 #figure(
-  caption: [Convergence of $e_n$ and $a_n$],
+  caption: [$a_n$ 與 $e_n$ 之收斂圖],
   plt,
 )
 
@@ -329,8 +330,6 @@ std.debug.print("Hello, {}!\n", .{"world"});
 )
 
 
-== Figures
-
 You use the `#figure` directive to include figures in your document. Here is an example:
 
 #let mean(arg) = $ lr(angle.l #arg angle.r) $
@@ -347,22 +346,10 @@ which will be rendered as:
 
 #figure(
   caption: [A Mystery Bird] + lorem(20),
-  image("../../src/assets/titech.svg", width: 55%),
+  image("../../../src/assets/titech.svg", width: 55%),
 )<tubame>
 
 
-== References<sec>
-A reference to a element can be made by using the `@` symbol. For example, you can refer to the equation above by writing `@eq` which will be rendered as
-
-
-And you can refer to the figure above by writing `@tubame` which will be rendered as
-
-@tubame
-
-and you can refer to a chapter by writing `@chap` which will be rendered as
-
-@chap
-@sec
 
 = 實分析
 

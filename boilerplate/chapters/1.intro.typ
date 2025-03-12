@@ -1,6 +1,6 @@
 #import "../packages.typ": *
 #import "../defs.typ": *
-#import utils: *
+#import components: *
 #import environments: *
 
 = 辯理
@@ -8,6 +8,8 @@ $R$ 二元謂語也，$phi$ 公式也，$x$ 變元也，$a$ 變元若常符也�
 
 
 = 集論
+
+hahaha
 
 == ZFC 公理
 == 交集

@@ -2,7 +2,7 @@
 /// entrypoint for the library
 
 // re-export the following modules
-#import "src/utils.typ"
+#import "src/components.typ"
 #import "src/environments.typ"
 
 #let config_isct(
@@ -47,7 +47,7 @@
       draft,
     ),
     appendix: appendix(config),
-    standalone: standalone,
+    standalone: standalone(config),
     mainbody: mainbody,
   )
 }

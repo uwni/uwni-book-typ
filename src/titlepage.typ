@@ -7,11 +7,11 @@
   draft,
 ) = {
   let (serif_font, sans_font, title_font, date_format, lang) = config
-  set page(  // explicitly set the paper
-    paper: "a4",
-    background: image("assets/background.svg", width: 100%), 
-    numbering: none, 
-    margin: (top: 3.5cm)
+  set page(
+    // explicitly set the paper
+    background: image("assets/background.svg", width: 100%),
+    numbering: none,
+    margin: (top: 3.5cm),
   )
 
   set par(first-line-indent: 0pt, leading: 1em, spacing: 1em)
@@ -50,12 +50,12 @@
       #set par(leading: 1em, spacing: 2em)
       by\
       #large[*#author_en\ #author_ja*]
-    
 
-      under the supervision of\    
+
+      under the supervision of\
 
       #v(1fr)
-   
+
       分析補遺
       代數補遺
     ]
@@ -72,6 +72,8 @@
 }
 
 #let titlepage(style: "", ..args) = {
+  set page(paper: "jis-b5")
+
   (
     "book": book_title(..args),
   ).at(style)

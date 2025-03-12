@@ -15,13 +15,14 @@
 // this is necessary before starting your main text
 #show: mainbody
 #include "chapters/1.intro.typ"
-#include "chapters/2.method.typ"
+#include "chapters/2_method/main.typ"
 #include "chapters/3.app.typ"
 
 #show: appendix
 #include "appendices/data.typ"
 #include "appendices/proof.typ"
 
+#components.justify_page()
 #include "misc/ack.typ"
 #include "misc/lop.typ"
 #include "misc/ref.typ"

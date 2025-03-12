@@ -13,13 +13,23 @@
   zh: (
     lang: "zh",
     region: "CN",
-    appendix: (supplement: "附錄", numbering: "A.1"),
-    title_font: ((name: "Lexend", covers: regex("[\u0000-\u2019]")), "尙古黑體SC"),
-    sans_font: ((name: "Lexend", covers: regex("[\u0000-\u2019]")), "尙古黑體SC"),
-    serif_font: ((name: "New Computer Modern", covers: regex("[\u0000-\u2019]")), "尙古明體SC"),
+    figure: "圖",
+    table: "表",
+    chapter: "篇",
+    section: "節",
+    toc: "目錄",
+    appendix: (
+      supplement: "附錄",
+      numbering: (a, ..) => {
+        ("甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸").at(a - 1)
+      },
+    ),
+    title_font: ((name: "Lexend", covers: "latin-in-cjk"), "尙古黑體SC"),
+    sans_font: ((name: "Lexend", covers: "latin-in-cjk"), "尙古黑體SC"),
+    serif_font: ((name: "New Computer Modern", covers: "latin-in-cjk"), "尙古明體SC"),
     math_font: ("New Computer Modern Math", "尙古明體SC"),
     mono_font: "IBM Plex Mono",
-    italic_font: ((name: "New Computer Modern", covers: regex("[\u0000-\u2019]")), "Zhuque Fangsong (technical preview)"),
+    italic_font: ((name: "New Computer Modern", covers: "latin-in-cjk"), "Zhuque Fangsong (technical preview)"),
     draft: "稿",
     date_format: "[year] 年 [month repr:numerical] 月",
     proof: [_證明_],
