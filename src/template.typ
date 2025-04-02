@@ -2,17 +2,18 @@
 #import "../packages.typ": *
 
 /// text properties for the main body
-#let _main_size = 11pt
-#let _lineskip = 0.65em
-#let _parskip = 1.2em
+#let _main_size = 10pt
+#let _lineskip = 0.75em
+#let _parskip = _lineskip //1.2em
+#let _eq_spacing = 1em
+#let _figure_spacing = 1.5em
 #let _heading1_size = 24pt
 #let _heading2_size = 16pt
 #let _heading3_size = 1.2 * _main_size
 #let _margin = (y: 2cm, inside: 2cm, outside: 1.3cm, extent: 2.5cm)
 
 // for the "book" weights of NCM font
-#let default_weight = 450
-
+#let default_weight = 400
 
 #let template(
   config,
@@ -119,15 +120,16 @@
   )
 
   /*-- Math Related --*/
-  show math.equation: set text(font: math_font, weight: default_weight, features: ("cv01",))
-
   set math.equation(numbering: num => numbering("(1.1)", counter(heading).get().first(), num))
+  show math.equation: set text(font: math_font, weight: default_weight, features: ("cv01",))
+  show math.equation: set block(spacing: _eq_spacing)
   show math.equation: it => {
     if it.block {
-      if it.has("label") { it } else [
+      let eq = if it.has("label") { it } else [
         #counter(math.equation).update(v => if v == 0 { 0 } else { v - 1 })
         #math.equation(it.body, block: true, numbering: none)#label("")
       ]
+      eq
     } else {
       h(0.25em, weak: true) + it + h(0.25em, weak: true)
     }
@@ -178,7 +180,7 @@
   show outline.entry.where(level: 1): it => {
     set text(font: sans_font, weight: "medium", fill: color_palette.primary)
     set block(above: 1.25em)
-    let prefix = if it.element.numbering == none { none } else if lang == "zh" { it.prefix() }
+    let prefix = if it.element.numbering == none { none } else if lang == "zh" { it.element.supplement + it.prefix() }
     let body = upper(it.body() + h(1fr) + it.page())
     link(
       it.element.location(),
@@ -188,9 +190,10 @@
 
   /* ---- Customization of Table&Image ---- */
   set figure(
-    gap: _lineskip,
+    gap: _lineskip, //default behavior of Typst, explicit setting for clarity
     numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()),
   )
+  show figure: set block(spacing: _figure_spacing)
   set figure.caption(separator: text(font: "Zapf Dingbats")[❘])
 
   show figure.caption: it => {
@@ -213,11 +216,31 @@
   show figure.where(kind: image): set figure(supplement: config.figure)
   show figure.where(kind: image): fig_with_auto_caption.with(margin_ext: _margin.extent, gap: _parskip)
 
+  /* ---- Customization of ref ---- */
+  // show ref: it => {
+  //   let eq = math.equation
+  //   let el = it.element
+  //   if el != none and el.func() == eq {
+  //     // Override equation references.
+  //     link(
+  //       el.location(),
+  //       numbering(
+  //         el.numbering,
+  //         ..counter(eq).at(el.location()),
+  //       ),
+  //     )
+  //   } else {
+  //     // Other references as usual.
+  //     it
+  //   }
+  // }
+
   /*-- emph --*/
   show emph: italic
 
   show "。": "．"
   show "，": "、"
+  show "？！": "‽"
 
   /// Main body.
   body

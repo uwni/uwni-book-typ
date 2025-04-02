@@ -1,5 +1,5 @@
-#import "../../packages.typ": *
-#import "../../defs.typ": *
+#import "../packages.typ": *
+#import "../defs.typ": *
 #import components: *
 #import environments: *
 
@@ -31,7 +31,7 @@ $
 == 整數論
 
 #let mr = $stretch(-, size: #1em)$
-#let dr = $slash.double$
+#let dr = $slash slash$
 
 相等關係
 $
@@ -58,14 +58,17 @@ $
 
 == 實數論
 請問，正方形之對角線長 $l$ 幾何? 以勾股定理知 $l^2 = 2$，擬其長以一分數之約式 $l = p\/q$
-$
+
+#multi-row($
   l^2 = 2 <=> p^2 = 2 q^2
-  <=> 2 divides p^2 <=> 2 divides p <=> (exists p') p = 2 p' <=>
+  <=> 2 divides p^2 <=> 2 divides p\
+  <=> exists p'(p = 2 p') <=>
   2p'^2 = q^2 <=> 2 divides q^2 <=> 2 divides q
-$
+$)
+
 $p$ 與 $q$ 皆偶數，而 $p \/ q$ 非約式也。故知 $l$ 非分數之屬也。以Ἵππασος之初覺爲嚆矢，分數之遺缺始昭於天下矣。此所以分數不可以度量也。
 
-另察一例，有集
+另察一例，有集分數其平方皆小於 $2$ 者
 #let QQ2 = $QQ_(<sqrt(2))$
 $
   QQ2 := {x in QQ | x^2 < 2}
@@ -95,35 +98,38 @@ $
 $
 可知 $x >= 2$ 皆上界也，而$sup QQ4 = 2$也
 
-凡 $Q$ 爲 $QQ$ 上的非空有上界的子集，則定義為實數。
+凡 $Q$ 爲 $QQ$ 上非空有上界子集，則定義為實數。
 全序集 $(X, prec.eq)$。若其非空子集之有上界者有上確界。曰*序完備*
 
-下三命題等價也
+以下三命題等價也
 + $(X, prec.eq)$ 序完備也
 + $X$ 非空子集之有下界者有下確界也
 + 凡 $∀A, B ⊆ X$ 不空，$∀a ∈ A, ∀b ∈ B, a ≤ b -> (∃c ∈ X)(∀a ∈ A, ∀b ∈ B) a <= c <= b$ 也。請證:
 $1 => 2$
 
 = 極限
-夫極限者，古希臘之先賢始用，至 Cauchy 嚴明定義之，已歷數千年矣。然微分與無窮小之辯，曾相爭其存廢逾千載而未絕也。或謂之爲 0，或謂之近似 0 非 0。時 0 而時亦非 0，故 George Berkeley 等以爲謬也。若論之以嚴謹之分析，則首應定義極限之概念。極限者近而不逮，傍而未屆也。定義數列 ${a_n}$ 之極限曰
+若夫極限者，古希臘之先賢始用，至 Cauchy 嚴明定義之，已歷數千年矣。然微分與無窮小之辯，曾相爭其存廢逾千載而未絕也。其或爲 0，或幾及 0 而非 0。時 0 而時亦非 0，George Berkeley 等甚異之。而物理學家總以無窮小算得正確之結果，故不以爲謬也。數學之理也，必明必晰。然則應先申明極限為何物，而後可以道嚴謹之分析而無虞也。定義數列 ${a_n}$ 之極限曰
 
 $
   & lim_(n -> oo) a_n = L \
   <=> quad & (forall epsilon > 0) (exists N in NN^*) (forall n > N) abs(a_n - L) < epsilon
 $
 
-$a_n$ 之值將屆於 $L$ ，抑不之及。不得知其然否也。恣取正數 $epsilon$，不論大小，必存一處 $N$，凡 $n$ 之後於 $N$ 者，$a_n$ 皆足近於 $L$。其近幾何? 謂其差小於 $epsilon$ 耳。所以謂之漸行漸近而不必駐於一處也。
+極限者近而不逮，傍而未屆也。$a_n$ 之值將屆於 $L$ ，抑不之至。不得知也。若以 $epsilon-N$ 定義論之。恣取正數 $epsilon$，不論大小，必存一處 $N$，凡 $n$ 之後於 $N$ 者，$a_n$ 與 $L$ 相距幾微。何以知其然也? 蓋其相距小於 $epsilon$ 者也。凡正數者，皆見小於 $a_n$ 與 $L$ 之相距，此所以度量其近也。豈非因 $n$ 之漸長而 $a_n$ 幾及於 $L$ 耶？！
+
 === 單調有界性之定理
 
-數列之收斂者，其極限必存焉。以單調有界性之定理得知收斂而不得知其極限也。欲察極限幾何，則猶須探其值而後驗以定義也。幸有各術如下以索極限，一曰夾逼定理，二曰四則運算，三曰 Stolz-Cesàro 定理也。
+數列之收斂者，其極限必存焉。以單調有界性之定理得知其收斂而不得知其極限也。欲察極限幾何，猶須探其值而後驗以定義也。幸有各術如下以索極限，一曰夾逼定理，二曰四則運算，三曰 Stolz-Cesàro 定理也。
 
 === 夾逼定理
 
 === 極限之代數運算
 極限之加減乘除是也。設以 $lim_(n -> oo) a_n = L$，$lim_(n -> oo) b_n = M$，由定義知 $forall epsilon > 0$
-$
+
+#multi-row($
   &(exists N_a in NN^*) (forall n > N_a) abs(a_n - L) < epsilon \ and quad &(exists N_b in NN^*) (forall n > N_b) abs(b_n - M) < epsilon
-$
+$)
+
 故而 $abs(-a_n - (-L)) = abs(a_n - L) < epsilon$，是以
 $
   lim_(n -> oo) (-a_n) = -L
@@ -144,7 +150,7 @@ $
 $
 
 == 級數論
-稱數列之累和曰級數也。若言遍加數列 ${a_n}$ 前 $n$ 項之和曰 $s_n = sum_(k=0)^n a_k$。則稱
+級數者，數列之累和也。若名累數列 ${a_n}$ 前 $n$ 項之和曰 $s_n = sum_(k=0)^n a_k$。則記
 
 $
   sum_(n=0)^oo a_n := lim_(n -> oo) s_n
@@ -156,7 +162,7 @@ $
 === 檢根術
 
 == 常數 $eu$
-常數 $eu$，或曰*自然底數*，初見於複利率之計算。凡 $n > 0$ 定義曰
+常數 $eu$，或曰*自然底數*，初見於複利率之計算。凡 $n > 0$ 有定義曰
 $ eu := lim_(n->oo) a_n = lim_(n -> oo) (1+1 / n)^n $
 此處唯需證明 RHS 收斂。請道其證法
 $
@@ -165,7 +171,7 @@ $
   = sum_(k=0)^n n^(underline(k)) / (k! n^k)
 $
 
-$n^(underline(k)) / (k! n^k)  >0$ 故知其嚴格遞增矣。再展開之
+$n^(underline(k)) / (k! n^k)  >0$ ，則知 $a_n$ 之嚴格遞增矣。再展開之
 
 $
   a_n &= sum_(k=0)^n 1 / k! n / n (n-1) / n dots.c (n-k+1) / n \
@@ -183,7 +189,7 @@ $
 $
 抑由 $ (forall k >= 2) quad 1/k! <= 1/k(k-1) = 1/(k-1) - 1/(k) $
 亦得所求證。由定義可知 $sup a_n = eu$ 也。
-法前例亦可得證 $e_n$ 之收斂。然 $lim_(n->oo) e_n eq.quest eu$ 之真僞猶未得知，不得擅斷。不妨先列圖以觀
+法前例亦可得證 $e_n$ 之收斂。然 $lim_(n->oo) e_n eq.quest eu$ 之真僞猶未可辨，不得臆斷。然則不妨先列圖以觀
 
 #let e_n_plot(n) = {
   range(n + 1).fold(
@@ -223,13 +229,13 @@ $
   plt,
 )
 
-再證二者收斂於同處。庶幾以夾逼定理證之，唯需各項 $a_n < e_n < eu$。以上圖料其然也。然理學也非證不信非驗不服。請證之如下。令@eq:an-expand 之 $n -> oo$，左邊收斂於 $eu$ 而 $"右邊" tilde.eq e_n$ 也。故 $e_n < eu$，可以[假幣定理]得其證矣。
+再證二者收斂於同處。庶幾以夾逼定理證之，唯需各項 $a_n < e_n < eu$。以上圖料其然也。然理學也非證不信非驗不服。請證之如下。令@eq:an-expand 之 $n -> oo$，左邊收斂於 $eu$ 而 $"右邊" tilde.eq e_n$ 也。故 $e_n < eu$，然則可以[假幣定理]得其證矣。
 
 此二例以其典據垂於史，而級數之收斂至 $eu$ 者止此二例歟? 另察一例 $b_n = (1 + 1 \/ n)^(n+1)$ 可見
 $
   lim_(n -> oo) b_n = lim_(n -> oo) (1 + 1 / n)a_n = lim_(n -> oo) a_n= eu
 $
-有違於前，$b_n$ 單調遞減收斂至 $eu$ 也，請證明如下
+有違於前，$b_n$ 單調遞減並收斂至 $eu$ 也。請證明如下
 $
   b_n / b_(n-1) =
   (1 + 1 / n)^(n+1) / (1 + 1 / (n-1))^n
@@ -251,7 +257,7 @@ $
   (1+1 / n )(1 - 1 / n^2)^n < (1+1 / n ) (1 + 1 / n^2)^(-n) < (1+1 / n )(1 + n / n^2)^(-1) = 1
 $
 
-即證得 $b_n\/b_(n-1) < 1$ 也。由此知 $b_n$ 嚴格遞減也。故 $inf b_n = eu$
+$b_n\/b_(n-1) < 1$ 也。而 $b_n$ 之嚴格遞減可知矣。故 $inf b_n = eu$
 
 === 指數函數
 
@@ -337,16 +343,16 @@ $ mean(x/y) $
 
 ```typ
 #figure(
-  caption: [A Mystery Bird],
-  image("../../src/assets/titech.svg", width: 65%),
+  caption: [A Mystery Bird which is the logo of a lost university],
+  image("../../src/assets/titech.svg", width: 55%),
 )
 ```
 
 which will be rendered as:
 
 #figure(
-  caption: [A Mystery Bird] + lorem(20),
-  image("../../../src/assets/titech.svg", width: 55%),
+  caption: [A Mystery Bird which is the logo of a lost university],
+  image("../../src/assets/titech.svg", width: 105%),
 )<tubame>
 
 

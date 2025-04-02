@@ -7,16 +7,15 @@
 #show math.pi: math.upright
 
 /// make the main text
-#include "chapters/abs.typ"
+#include "chapters/0_abs.typ"
 
 /// make the abstract
 #outline()
 
 // this is necessary before starting your main text
 #show: mainbody
-#include "chapters/1.intro.typ"
-#include "chapters/2_method/main.typ"
-#include "chapters/3.app.typ"
+#include "chapters/1_intro.typ"
+#include "chapters/2_set.typ"
 
 #show: appendix
 #include "appendices/data.typ"

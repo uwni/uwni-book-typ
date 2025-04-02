@@ -89,26 +89,29 @@
 #let vline = table.vline(stroke: 0.05em)
 
 #let multi-row(eq) = {
-  eq
-    .body
-    .children
-    .split(linebreak())
-    .map([].func())
-    .zip((
-      [],
-      {
-        if (eq.has("label")) {
-          let c = counter(math.equation)
-          c.step()
-          h(1em)
-          context c.display()
-        }
-      },
-    ))
-    .map(array.join)
-    .map(math.equation.with(block: true, numbering: none))
-    .map(box)
-    .join(((h(1fr),) * 2).join(linebreak()))
+  block(
+    spacing: 1em,
+    eq
+      .body
+      .children
+      .split(linebreak())
+      .map([].func())
+      .zip((
+        [],
+        {
+          if (eq.has("label")) {
+            let c = counter(math.equation)
+            c.step()
+            h(1em)
+            context c.display()
+          }
+        },
+      ))
+      .map(array.join)
+      .map(math.equation.with(block: true, numbering: none))
+      .map(box)
+      .join(((h(1fr),) * 2).join(linebreak())),
+  )
 }
 
 #let justify_page() = {
