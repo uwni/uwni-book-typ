@@ -334,16 +334,17 @@
 
   show heading.where(level: 1): it => {
     it
-    note(
-      dy: -2em,
+    place(top, note(
       numbered: false,
+      shift: false,
+      dy: 1.5cm,
       {
         let nexth2 = heading.where(level: 2).after(here())
         let nexth1 = query(heading.where(level: 1, outlined: true).after(here())).at(1)
         block(spacing: 1em, sans[*Contents*])
         outline(target: nexth2.before(nexth1.location()), indent: n => (n - 1) * 1em, depth: 2, title: none)
       },
-    )
+    ))
   }
 
   // reset the counter for the main body
