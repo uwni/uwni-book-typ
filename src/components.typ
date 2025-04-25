@@ -1,3 +1,14 @@
+
+#import "../packages.typ": marginalia // import package
+
+#let note_text_style = (size: 9.35pt, style: "normal", weight: "regular")
+#let note_par_style = (spacing: 1.2em, leading: 0.5em, hanging-indent: 0pt)
+
+#let note = marginalia.note.with(text-style: note_text_style, par-style: note_par_style)
+#let figurenote = marginalia.notefigure.with(text-style: note_text_style, par-style: note_par_style)
+#let wideblock = marginalia.wideblock
+
+
 #let watermark(
   body,
   padding: 4em,
@@ -119,6 +130,7 @@
   pagebreak(to: "odd")
 }
 
+
 #let styled_heading(kind: none, lineskip: none, text_size: none, config: none) = it => {
   counter(math.equation).update(0)
   counter(figure.where(kind: table)).update(0)
@@ -182,24 +194,3 @@
   }
 }
 
-#let fig_with_auto_caption(it, margin_ext: none, gap: 1em) = layout(((width, height)) => {
-  let (width: c_width, height: c_height) = measure(width: width, height: height, it.body)
-  set align(if is_even_page() { right } else { left } + bottom)
-
-  // overflowed
-  if c_width >= width {
-    // if the content is too tall, put the caption on the top for better visibility
-    let pos = if 2 * c_height > height { top } else { bottom }
-    set figure.caption(position: bottom)
-    it
-  } else {
-    set text(hyphenate: true)
-    // let gap = it.gap
-    stack(
-      dir: if is_even_page() { rtl } else { ltr },
-      spacing: gap,
-      it.body,
-      block(width: width - c_width + margin_ext - gap, it.caption),
-    )
-  }
-})

@@ -48,6 +48,7 @@
     ),
     appendix: appendix(config),
     standalone: standalone(config),
-    mainbody: mainbody,
+    mainbody: body => mainbody(body, config, two_sided),
+    outline: _outline.with(config),
   )
 }

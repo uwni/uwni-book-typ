@@ -9,7 +9,8 @@
   titlepage,
   standalone,
   mainbody,
-  appendix
+  appendix,
+  outline
 ) = config_isct(
   // ["en"|"ja"]
   config: "zh",

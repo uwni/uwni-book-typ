@@ -310,7 +310,7 @@ std.debug.print("Hello, {}!\n", .{"world"});
 ```
 
 == Tables
-#figure(
+#(figure(
   caption: [Truth Table for 2-to-4 Decoder],
   {
     table(
@@ -331,9 +331,8 @@ std.debug.print("Hello, {}!\n", .{"world"});
       $1$, $1$, $0$, $0$, $0$, $1$,
       heavyrule(),
     )
-    fignote[$1$ = Active, $0$ = Inactive]
   },
-)
+))
 
 
 You use the `#figure` directive to include figures in your document. Here is an example:
@@ -351,9 +350,11 @@ $ mean(x/y) $
 which will be rendered as:
 
 #figure(
-  caption: [A Mystery Bird which is the logo of a lost university],
-  image("../../src/assets/titech.svg", width: 105%),
+  caption: [A Mystery Bird which is the logo of a lost university, A Mystery Bird which is the logo of a lost university, A Mystery Bird which is the logo of a lost university, A Mystery Bird which is the logo of a lost university],
+  image("../../src/assets/titech.svg", width: 70%),
 )<tubame>
+
+get-
 
 
 

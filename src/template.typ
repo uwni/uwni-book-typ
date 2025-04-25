@@ -2,7 +2,7 @@
 #import "../packages.typ": *
 
 /// text properties for the main body
-#let _main_size = 10pt
+#let _main_size = 11pt
 #let _lineskip = 0.75em
 #let _parskip = _lineskip //1.2em
 #let _eq_spacing = 1em
@@ -10,10 +10,32 @@
 #let _heading1_size = 24pt
 #let _heading2_size = 16pt
 #let _heading3_size = 1.2 * _main_size
-#let _margin = (y: 2cm, inside: 2cm, outside: 1.3cm, extent: 2.5cm)
+#let _page_top_margin = 2.5cm
+#let _page_bottom_margin = 2.5cm
 
 // for the "book" weights of NCM font
 #let default_weight = 400
+#let _outline(config, ..args) = {
+  set outline(indent: auto, depth: 2, title: config.toc)
+  set par(leading: 1em, spacing: 0.5em)
+
+
+  show outline.entry.where(level: 1): it => {
+    set text(font: config.sans_font, weight: "medium", fill: color_palette.primary)
+    set block(above: 1.25em)
+    let prefix = if it.element.numbering == none { none } else if config.lang == "zh" {
+      it.element.supplement + it.prefix()
+    }
+    let body = upper(it.body() + h(1fr) + it.page())
+    link(
+      it.element.location(),
+      it.indented(prefix, body),
+    )
+  }
+
+  justify_page()
+  outline(..args)
+}
 
 #let template(
   config,
@@ -34,7 +56,6 @@
     lang,
   ) = config
 
-  let serif = text.with(font: serif_font)
   let sans = text.with(font: sans_font)
   let italic = text.with(font: italic_font)
   let semi = text.with(weight: "semibold")
@@ -51,17 +72,32 @@
   }
 
   set document(title: title.en, author: author_en, date: date)
+  let marginalia_config = (
+    inner: (far: 15mm, width: 0mm, sep: 5mm),
+    outer: (far: 15mm, width: 30mm, sep: 5mm),
+    top: _page_top_margin,
+    bottom: _page_bottom_margin,
+    book: two_sided,
+    clearance: 8pt,
+  )
+
+  marginalia.configure(..marginalia_config)
 
   set page(
     // explicitly set the paper
-    paper: "jis-b5",
-    margin: (y: _margin.y, inside: _margin.inside, outside: _margin.outside + _margin.extent),
+    paper: "a4",
+    ..marginalia.page-setup(..marginalia_config),
     //for draft
     background: if draft {
       watermark(text(25pt, fill: rgb("#e8eaf1"), sans(upper(draft))))
     },
     header: context if not is_starting() and current_chapter() != none {
+      marginalia.notecounter.update(0)
+      let book = marginalia._config.get().book
+      let leftm = marginalia.get-left()
+      let rightm = marginalia.get-right()
       let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
+      let book_left = book and is_even_page()
       let chap_prefix = [
         #if chap_idx > 0 {
           semi[篇#chap_idx] + h(1em, weak: true)
@@ -74,38 +110,55 @@
           sect
         }
       ]
-
-      if lang == "zh" {
-        let page_num = semi(current_page())
-        let skip = h(_margin.extent - measure(page_num).width, weak: true)
-        sans[
-          #if two_sided {
-            if is_even_page() [
-              #h(-_margin.extent)#page_num#skip#chap_prefix
-            ] else [
-              #set align(right)
-              #sect_prefix#skip#page_num#h(-_margin.extent)
-            ]
-          } else [
-            #chap_prefix
-            #h(1fr)
-            #page_num
-          ]
-        ]
-      } else {
-        sans[#chap_prefix #h(1fr) #page_num]
-      }
+      let page_num = semi(current_page())
+      set align(if not book_left { right } else { left })
+      set text(font: sans_font)
+      wideblock(
+        double: true,
+        {
+          box(
+            width: leftm.width,
+            if book_left [
+              #page_num
+            ],
+          )
+          h(leftm.sep)
+          box(
+            width: 1fr,
+            if not book_left { sect_prefix } else { chap_prefix },
+          )
+          h(rightm.sep)
+          box(
+            width: rightm.width,
+            if not book_left {
+              page_num
+            },
+          )
+        },
+      )
     },
     footer: context if is_starting() {
+      let leftm = marginalia.get-left()
+      let rightm = marginalia.get-right()
       let page = sans(semi(current_page()))
-      if is_even_page() [
-        #h(-_margin.extent) #page #h(1fr)
-      ] else [
-        #h(1fr) #page #h(-_margin.extent)
-      ]
+      wideblock(
+        double: true,
+
+        {
+          if is_even_page() [
+            #page
+          ]
+          h(leftm.sep)
+          h(1fr)
+          h(rightm.sep)
+          if not is_even_page() [
+            #page
+          ]
+        },
+      )
     },
-    // footer-descent: 30% + 0pt, // default
-    // header-ascent: 30% + 0pt,  // default
+    footer-descent: 30% + 0pt, // default
+    header-ascent: 30% + 0pt, // default
     numbering: "I",
   )
   counter(page).update(1)
@@ -167,54 +220,6 @@
     [\u{258C}#it.body]
   }
 
-  /* ---- Customization of ToC ---- */
-  set outline(indent: auto, depth: 2, title: config.toc)
-
-  show outline: it => {
-    set page(numbering: "I")
-    set par(leading: 1em, spacing: 0.5em)
-    it
-    justify_page()
-  }
-
-  show outline.entry.where(level: 1): it => {
-    set text(font: sans_font, weight: "medium", fill: color_palette.primary)
-    set block(above: 1.25em)
-    let prefix = if it.element.numbering == none { none } else if lang == "zh" { it.element.supplement + it.prefix() }
-    let body = upper(it.body() + h(1fr) + it.page())
-    link(
-      it.element.location(),
-      it.indented(prefix, body),
-    )
-  }
-
-  /* ---- Customization of Table&Image ---- */
-  set figure(
-    gap: _lineskip, //default behavior of Typst, explicit setting for clarity
-    numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()),
-  )
-  show figure: set block(spacing: _figure_spacing)
-  set figure.caption(separator: text(font: "Zapf Dingbats")[❘])
-
-  show figure.caption: it => {
-    set par(leading: _lineskip, first-line-indent: 0pt, justify: false)
-    align(left)[
-      #sans(fill: color_palette.primary, weight: "medium")[
-        #it.supplement
-        #context counter(figure.where(kind: it.kind)).display()
-      ] #it.separator #it.body
-    ]
-  }
-
-  set table(stroke: none, align: horizon + center)
-  show figure.where(kind: table): set figure(supplement: config.table)
-  show figure.where(kind: table): it => {
-    set figure(supplement: config.table)
-    set figure.caption(position: top)
-    it
-  }
-  show figure.where(kind: image): set figure(supplement: config.figure)
-  show figure.where(kind: image): fig_with_auto_caption.with(margin_ext: _margin.extent, gap: _parskip)
 
   /* ---- Customization of ref ---- */
   // show ref: it => {
@@ -256,8 +261,91 @@
   }
 }
 
-#let mainbody(body) = {
-  set page(numbering: "1")
+#let mainbody(body, config, two_sided) = {
+  let (
+    serif_font,
+    sans_font,
+    math_font,
+    mono_font,
+    italic_font,
+    lang,
+  ) = config
+
+  let sans = text.with(font: sans_font)
+
+  let marginalia_config = (
+    inner: (far: 15mm, width: 0mm, sep: 7.5mm),
+    outer: (far: 15mm, width: 40mm, sep: 7.5mm),
+    top: _page_top_margin,
+    bottom: _page_bottom_margin,
+    book: two_sided,
+    clearance: 8pt,
+  )
+
+  marginalia.configure(..marginalia_config)
+
+  set page(
+    numbering: "1", // setup margins:
+    ..marginalia.page-setup(..marginalia_config),
+  )
+
+  /* ---- Customization of Table&Image ---- */
+  set figure(
+    gap: 0pt,
+    numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()),
+  )
+  show figure: set block(spacing: _figure_spacing)
+  set figure.caption(position: top, separator: [:])
+  show figure.caption: it => [
+    #set text(..note_text_style)
+    #set par(..note_par_style)
+    #box(
+      sans(weight: "medium")[
+        #it.supplement
+        #context counter(figure.where(kind: it.kind)).display()
+      ]
+        + it.separator,
+    )
+    #it.body
+  ]
+
+  show figure: it => layout(((width, height)) => {
+    let f_height = measure(width: width, height: height, it.body).height
+    let overheight = 2 * f_height > height
+    set figure(gap: 0pt)
+
+    show figure.caption.where(position: top): it => context {
+      let height = measure(width: 40mm, block(it)).height
+      note(
+        numbered: false,
+        dy: if overheight { 0pt } else { f_height - height },
+        align-baseline: false,
+        keep-order: true,
+        it,
+      )
+    }
+
+    it
+  })
+
+  set table(stroke: none, align: horizon + center)
+  show figure.where(kind: table): set figure(supplement: config.table)
+  show figure.where(kind: image): set figure(supplement: config.figure)
+
+  show heading.where(level: 1): it => {
+    it
+    note(
+      dy: -2em,
+      numbered: false,
+      {
+        let nexth2 = heading.where(level: 2).after(here())
+        let nexth1 = query(heading.where(level: 1, outlined: true).after(here())).at(1)
+        block(spacing: 1em, sans[*Contents*])
+        outline(target: nexth2.before(nexth1.location()), indent: n => (n - 1) * 1em, depth: 2, title: none)
+      },
+    )
+  }
+
   // reset the counter for the main body
   counter(page).update(1)
   body
