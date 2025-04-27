@@ -110,7 +110,12 @@
           sect
         }
       ]
-      let page_num = semi(current_page())
+      let page_num = block(
+        fill: blue,
+        height: 100%,
+        outset: (y: 1em, x: 1em),
+        semi(fill: white, current_page()),
+      )
       set align(if not book_left { right } else { left })
       set text(font: sans_font)
       wideblock(
@@ -315,7 +320,7 @@
     set figure(gap: 0pt)
 
     show figure.caption.where(position: top): it => context {
-      let height = measure(width: 40mm, block(it)).height
+      let height = measure(width: marginalia_config.outer.width, block(it)).height
       note(
         numbered: false,
         dy: if overheight { 0pt } else { f_height - height },
@@ -334,17 +339,22 @@
 
   show heading.where(level: 1): it => {
     it
-    place(top, note(
-      numbered: false,
-      shift: false,
-      dy: 1.5cm,
-      {
-        let nexth2 = heading.where(level: 2).after(here())
-        let nexth1 = query(heading.where(level: 1, outlined: true).after(here())).at(1)
-        block(spacing: 1em, sans[*Contents*])
-        outline(target: nexth2.before(nexth1.location()), indent: n => (n - 1) * 1em, depth: 2, title: none)
-      },
-    ))
+    place(
+      top,
+      note(
+        numbered: false,
+        shift: false,
+        dy: 1.5cm,
+        {
+          let nexth2 = heading.where(level: 2).after(here())
+          let nexth1 = query(heading.where(level: 1, outlined: true).after(here())).at(1)
+          if query(nexth2.before(nexth1.location())).len() > 0 {
+            block(spacing: 1em, sans[*Contents*])
+          }
+          outline(target: nexth2.before(nexth1.location()), indent: n => (n - 1) * 1em, depth: 2, title: none)
+        },
+      ),
+    )
   }
 
   // reset the counter for the main body
