@@ -41,7 +41,7 @@
   [
     #par(justify: false)[
       #title_text(title.en, lang: "en")\
-      #title_cn_text(title.at(lang), lang: lang)
+      #title_cn_text(title.at(lang, default: none), lang: lang)
     ]
 
     #v(1fr)

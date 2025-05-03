@@ -13,11 +13,28 @@
 #let _page_top_margin(page_style) = if page_style == "top" { 2.5cm } else { 1.5cm }
 #let _page_bottom_margin = 2cm
 #let _page_num_size = 15pt
+#let _page_geo(page_style) = (
+  inner: (far: 15mm, width: 0mm, sep: 0mm),
+  outer: (far: 15mm, width: 40mm, sep: 7.5mm),
+  top: _page_top_margin(page_style),
+  bottom: _page_bottom_margin,
+  clearance: 8pt,
+)
 
 // for the "book" weights of NCM font
 #let default_weight = 400
 #let _outline(config, ..args) = {
-  set outline(indent: auto, depth: 2, title: config.toc)
+  set outline(indent: auto, depth: 2)
+  set outline(title: config.toc) if "toc" in config
+  let outline_marginalia_config = (
+    inner: (far: 15mm, width: 0mm, sep: 10mm),
+    outer: (far: 15mm, width: 0mm, sep: 10mm),
+    bottom: _page_bottom_margin,
+    // book: two_sided,
+  )
+  marginalia.configure(..outline_marginalia_config)
+
+  set page(..marginalia.page-setup(..outline_marginalia_config))
   set par(leading: 1em, spacing: 0.5em)
 
   show outline.entry.where(level: 1): it => {
@@ -33,8 +50,8 @@
     )
   }
 
-  justify_page()
   outline(..args)
+  justify_page()
 }
 
 #let template(
@@ -74,12 +91,8 @@
 
   set document(title: title.en, author: author_en, date: date)
   let marginalia_config = (
-    inner: (far: 15mm, width: 0mm, sep: 5mm),
-    outer: (far: 15mm, width: 30mm, sep: 5mm),
-    top: _page_top_margin(page_style),
-    bottom: _page_bottom_margin,
+    .._page_geo(page_style),
     book: two_sided,
-    clearance: 8pt,
   )
 
   marginalia.configure(..marginalia_config)
@@ -185,19 +198,13 @@
       let leftm = marginalia.get-left()
       let rightm = marginalia.get-right()
       let page = sans(_page_num_size, semi(current_page()))
+
       wideblock(
         double: true,
-        {
-          if is_even_page() [
-            #page
-          ]
-          h(leftm.sep)
-          h(1fr)
-          h(rightm.sep)
-          if not is_even_page() [
-            #page
-          ]
-        },
+        align(
+          if is_even_page() { left } else { right },
+          page,
+        ),
       )
     },
     footer-descent: 30% + 0pt, // default
@@ -303,7 +310,6 @@
     justify_page()
   }
 }
-
 #let mainbody(body, config, two_sided, page_style) = {
   let (
     serif_font,
@@ -317,10 +323,7 @@
   let sans = text.with(font: sans_font)
 
   let marginalia_config = (
-    inner: (far: 15mm, width: 0mm, sep: 7.5mm),
-    outer: (far: 15mm, width: 40mm, sep: 7.5mm),
-    top: _page_top_margin(page_style),
-    bottom: _page_bottom_margin,
+    .._page_geo(page_style),
     book: two_sided,
     clearance: 8pt,
   )
@@ -328,8 +331,8 @@
   marginalia.configure(..marginalia_config)
 
   set page(
-    numbering: "1", // setup margins:
     ..marginalia.page-setup(..marginalia_config),
+    numbering: "1", // setup margins:
   )
 
   /* ---- Customization of Table&Image ---- */
@@ -372,8 +375,8 @@
   })
 
   set table(stroke: none, align: horizon + center)
-  show figure.where(kind: table): set figure(supplement: config.table)
-  show figure.where(kind: image): set figure(supplement: config.figure)
+  show figure.where(kind: table): set figure(supplement: config.table) if "table" in config
+  show figure.where(kind: image): set figure(supplement: config.figure) if "figure" in config
 
   show heading.where(level: 1): it => {
     it
@@ -399,6 +402,7 @@
   counter(page).update(1)
   body
 }
+
 
 // TODO: specify the appendix heading
 #let appendix(config) = body => {

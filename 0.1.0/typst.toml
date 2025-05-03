@@ -1,5 +1,5 @@
 [package]
-name = "isct-thesis"
+name = "uwni-book-typ"
 version = "0.1.0"
 entrypoint = "lib.typ"
 authors = ["wukyu"]
