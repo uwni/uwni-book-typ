@@ -10,15 +10,15 @@
 #let _heading1_size = 24pt
 #let _heading2_size = 16pt
 #let _heading3_size = 1.2 * _main_size
-#let _page_top_margin = 2.5cm
-#let _page_bottom_margin = 2.5cm
+#let _page_top_margin(page_style) = if page_style == "top" { 2.5cm } else { 1.5cm }
+#let _page_bottom_margin = 2cm
+#let _page_num_size = 15pt
 
 // for the "book" weights of NCM font
 #let default_weight = 400
 #let _outline(config, ..args) = {
   set outline(indent: auto, depth: 2, title: config.toc)
   set par(leading: 1em, spacing: 0.5em)
-
 
   show outline.entry.where(level: 1): it => {
     set text(font: config.sans_font, weight: "medium", fill: color_palette.primary)
@@ -44,6 +44,7 @@
   date,
   draft,
   two_sided,
+  page_style,
   body,
 ) = {
   ///utilities
@@ -75,7 +76,7 @@
   let marginalia_config = (
     inner: (far: 15mm, width: 0mm, sep: 5mm),
     outer: (far: 15mm, width: 30mm, sep: 5mm),
-    top: _page_top_margin,
+    top: _page_top_margin(page_style),
     bottom: _page_bottom_margin,
     book: two_sided,
     clearance: 8pt,
@@ -93,11 +94,7 @@
     },
     header: context if not is_starting() and current_chapter() != none {
       marginalia.notecounter.update(0)
-      let book = marginalia._config.get().book
-      let leftm = marginalia.get-left()
-      let rightm = marginalia.get-right()
       let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
-      let book_left = book and is_even_page()
       let chap_prefix = [
         #if chap_idx > 0 {
           semi[篇#chap_idx] + h(1em, weak: true)
@@ -110,45 +107,86 @@
           sect
         }
       ]
-      let page_num = block(
-        fill: blue,
-        height: 100%,
-        outset: (y: 1em, x: 1em),
-        semi(fill: white, current_page()),
-      )
-      set align(if not book_left { right } else { left })
+      let book = marginalia._config.get().book
+      let book_left = book and is_even_page()
+      let x_alignmnent = if book_left {
+        left
+      } else {
+        right
+      }
+      set align(x_alignmnent)
       set text(font: sans_font)
-      wideblock(
-        double: true,
-        {
-          box(
-            width: leftm.width,
-            if book_left [
-              #page_num
-            ],
-          )
-          h(leftm.sep)
-          box(
-            width: 1fr,
-            if not book_left { sect_prefix } else { chap_prefix },
-          )
-          h(rightm.sep)
-          box(
-            width: rightm.width,
-            if not book_left {
-              page_num
+
+      if page_style == "top" {
+        let leftm = marginalia.get-left()
+        let rightm = marginalia.get-right()
+        let page_num = block(
+          fill: blue,
+          height: 100%,
+          outset: (y: 1em, x: 1em),
+          semi(fill: white, current_page()),
+        )
+        wideblock(
+          double: true,
+          {
+            set text(_page_num_size)
+            box(
+              width: leftm.width,
+              if book_left [
+                #page_num
+              ],
+            )
+            h(leftm.sep)
+            box(
+              width: 1fr,
+              if book_left { chap_prefix } else { sect_prefix },
+            )
+            h(rightm.sep)
+            box(
+              width: rightm.width,
+              if not book_left {
+                page_num
+              },
+            )
+          },
+        )
+      } else {
+        place(
+          top,
+          dy: _page_top_margin(page_style),
+          note(
+            numbered: false,
+            shift: false,
+            context {
+              let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
+              let book_left = book and is_even_page()
+              set align(if book_left {
+                left
+              } else {
+                right
+              })
+              stack(
+                spacing: 5pt,
+                semi(_page_num_size, current_page()),
+                line(
+                  length: 100%,
+                  stroke: 1pt,
+                ),
+                if book_left [#chap] else if sect_idx != none and sect_idx > 0 [
+                  #text(_main_size)[#numbering("1.1", chap_idx, sect_idx)#sect]
+                ],
+              )
             },
-          )
-        },
-      )
+          ),
+        )
+      }
     },
     footer: context if is_starting() {
       let leftm = marginalia.get-left()
       let rightm = marginalia.get-right()
-      let page = sans(semi(current_page()))
+      let page = sans(_page_num_size, semi(current_page()))
       wideblock(
         double: true,
-
         {
           if is_even_page() [
             #page
@@ -266,7 +304,7 @@
   }
 }
 
-#let mainbody(body, config, two_sided) = {
+#let mainbody(body, config, two_sided, page_style) = {
   let (
     serif_font,
     sans_font,
@@ -281,7 +319,7 @@
   let marginalia_config = (
     inner: (far: 15mm, width: 0mm, sep: 7.5mm),
     outer: (far: 15mm, width: 40mm, sep: 7.5mm),
-    top: _page_top_margin,
+    top: _page_top_margin(page_style),
     bottom: _page_bottom_margin,
     book: two_sided,
     clearance: 8pt,
@@ -347,11 +385,11 @@
         dy: 1.5cm,
         {
           let nexth2 = heading.where(level: 2).after(here())
-          let nexth1 = query(heading.where(level: 1, outlined: true).after(here())).at(1)
-          if query(nexth2.before(nexth1.location())).len() > 0 {
-            block(spacing: 1em, sans[*Contents*])
+          let nexth1 = heading.where(level: 1, outlined: true).after(here(), inclusive: false)
+          if query(nexth2.before(nexth1)) != () {
+            block(spacing: 1em, [*Contents*])
           }
-          outline(target: nexth2.before(nexth1.location()), indent: n => (n - 1) * 1em, depth: 2, title: none)
+          outline(target: nexth2.before(nexth1), indent: n => (n - 1) * 1em, depth: 2, title: none)
         },
       ),
     )

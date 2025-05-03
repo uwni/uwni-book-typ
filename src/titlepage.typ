@@ -72,7 +72,7 @@
 }
 
 #let titlepage(style: "", ..args) = {
-  set page(paper: "jis-b5")
+  set page(paper: "a4")
 
   (
     "book": book_title(..args),

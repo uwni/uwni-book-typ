@@ -13,6 +13,7 @@
   date: datetime.today(),
   draft: false,
   two_sided: false,
+  page_style: "side",
   title_style: "[title_style]",
 ) = {
   
@@ -35,6 +36,7 @@
       date,
       draft,
       two_sided,
+      page_style,
       body,
     ),
     titlepage: titlepage(
@@ -48,7 +50,7 @@
     ),
     appendix: appendix(config),
     standalone: standalone(config),
-    mainbody: body => mainbody(body, config, two_sided),
+    mainbody: body => mainbody(body, config, two_sided, page_style),
     outline: _outline.with(config),
   )
 }
