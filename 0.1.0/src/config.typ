@@ -2,10 +2,9 @@
   en: (
     lang: "en",
     appendix: (supplement: "Appendix", numbering: "A.1"),
-    title_font: ((name: "Lexend", covers: "latin-in-cjk"), "尙古黑體SC"),
-    sans_font: ((name: "Lexend", covers: "latin-in-cjk"), "尙古黑體SC"),
-    serif_font: ((name: "TeX Gyre Termes", covers: "latin-in-cjk"), "尙古明體SC"),
-    italic_font: ((name: "TeX Gyre Termes", covers: "latin-in-cjk"), "Zhuque Fangsong (technical preview)"),
+    title_font: ("TeX Gyre Heros", "尙古黑體SC"),
+    sans_font: ("TeX Gyre Heros", "尙古黑體SC"),
+    serif_font: ("Libertinus Serif", "尙古明體SC"),
     math_font: "TeX Gyre Pagella Math",
     mono_font: "IBM Plex Mono",
     draft: "draft",

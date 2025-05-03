@@ -14,8 +14,8 @@
 #let _page_bottom_margin = 2cm
 #let _page_num_size = 15pt
 #let _page_geo(page_style) = (
-  inner: (far: 15mm, width: 0mm, sep: 0mm),
-  outer: (far: 15mm, width: 40mm, sep: 7.5mm),
+  inner: (far: 20mm, width: 0mm, sep: 0mm),
+  outer: (far: 20mm, width: 40mm, sep: 7.5mm),
   top: _page_top_margin(page_style),
   bottom: _page_bottom_margin,
   clearance: 8pt,
@@ -27,18 +27,17 @@
   set outline(indent: auto, depth: 2)
   set outline(title: config.toc) if "toc" in config
   let outline_marginalia_config = (
-    inner: (far: 15mm, width: 0mm, sep: 10mm),
-    outer: (far: 15mm, width: 0mm, sep: 10mm),
+    inner: (far: 20mm, width: 0mm, sep: 10mm),
+    outer: (far: 20mm, width: 0mm, sep: 10mm),
     bottom: _page_bottom_margin,
     // book: two_sided,
   )
   marginalia.configure(..outline_marginalia_config)
-
   set page(..marginalia.page-setup(..outline_marginalia_config))
   set par(leading: 1em, spacing: 0.5em)
 
   show outline.entry.where(level: 1): it => {
-    set text(font: config.sans_font, weight: "medium", fill: color_palette.primary)
+    set text(font: config.sans_font, weight: "bold", fill: color_palette.primary)
     set block(above: 1.25em)
     let prefix = if it.element.numbering == none { none } else if config.lang == "zh" {
       it.element.supplement + it.prefix()
@@ -49,8 +48,8 @@
       it.indented(prefix, body),
     )
   }
-
-  outline(..args)
+  heading(outlined: false, numbering: none, "Contents", depth: 1)
+  columns(2, [#outline(..args, title: none)#v(1pt)])
   justify_page()
 }
 
@@ -70,12 +69,11 @@
     sans_font,
     math_font,
     mono_font,
-    italic_font,
     lang,
   ) = config
 
   let sans = text.with(font: sans_font)
-  let italic = text.with(font: italic_font)
+  let italic = if "italic_font" in config { text.with(font: { config.italic_font }) } else { text }
   let semi = text.with(weight: "semibold")
 
   /// Set the document's basic properties.
@@ -256,10 +254,10 @@
 
   show heading.where(level: 2): it => {
     show: block.with(spacing: _heading2_size)
-    set text(_heading2_size, weight: "medium", font: sans_font, fill: color_palette.primary)
+    set text(_heading2_size, weight: "bold", font: sans_font, fill: color_palette.primary)
     v(_main_size)
     counter(heading).display(it.numbering)
-    h(11pt)
+    h(1em)
     it.body
   }
 
@@ -316,7 +314,6 @@
     sans_font,
     math_font,
     mono_font,
-    italic_font,
     lang,
   ) = config
 
