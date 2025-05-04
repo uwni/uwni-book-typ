@@ -15,6 +15,7 @@
   two_sided: false,
   page_style: "side",
   title_style: "[title_style]",
+  chap_imgs: (),
 ) = {
   let config = if type(config) == str {
     import "src/config.typ": config as default_config
@@ -36,6 +37,7 @@
       draft,
       two_sided,
       page_style,
+      chap_imgs,
       body,
     ),
     titlepage: titlepage(

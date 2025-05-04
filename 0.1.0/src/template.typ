@@ -1,6 +1,11 @@
 #import "components.typ": *
 #import "../packages/marginalia.typ": *
 
+// 0: head
+// 1: body
+// 2: tail
+#let _state = state("_status", "head")
+
 /// text properties for the main body
 #let _main_size = 11pt
 #let _lineskip = 0.75em
@@ -10,7 +15,7 @@
 #let _heading1_size = 24pt
 #let _heading2_size = 15pt
 #let _heading3_size = 1.2 * _main_size
-#let _page_top_margin(page_style) = if page_style == "top" { 32mm } else { 16mm } + _main_size
+#let _page_top_margin(page_style) = if page_style == "top" { 20mm } else { 16mm } + _main_size
 #let _page_bottom_margin = 2cm
 #let _page_num_size = 15pt
 #let _page_geo(page_style) = (
@@ -18,7 +23,7 @@
   outer: (far: 20mm, width: 40mm, sep: 8mm),
   top: _page_top_margin(page_style),
   bottom: _page_bottom_margin,
-  clearance: _main_size * 0.85,
+  clearance: _main_size,
 )
 // for the "book" weights of NCM font
 #let _default_weight = 400
@@ -31,6 +36,7 @@
   draft,
   two_sided,
   page_style,
+  chap_imgs,
   body,
 ) = {
   ///utilities
@@ -70,15 +76,16 @@
     paper: "a4",
     ..marginalia.page-setup(..marginalia_config),
     //for draft
-    background: if draft {
-      watermark(text(25pt, fill: rgb("#e8eaf1"), sans(upper(draft))))
+    background: context if is_starting() and _state.get() == "body" {
+      let img = block(chap_imgs.at(counter(heading).get().at(0)), clip: true, width: 100%, height: 20em,)
+      place(top, img)
     },
     header: context if not is_starting() and current_chapter() != none {
       marginalia.notecounter.update(0)
       let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
       let chap_prefix = [
         #if chap_idx > 0 {
-          semi[篇#chap_idx] + h(1em, weak: true)
+          semi[Chapter #chap_idx] + [#h(0.5em, weak: true)•#h(0.5em, weak: true)]
         }
         #chap
       ]
@@ -101,16 +108,11 @@
       if page_style == "top" {
         let leftm = marginalia.get-left()
         let rightm = marginalia.get-right()
-        let page_num = block(
-          fill: blue,
-          height: 100%,
-          outset: (y: 1em, x: 1em),
-          semi(fill: white, current_page()),
-        )
+        let page_num = semi(_page_num_size, current_page())
+
         wideblock(
           double: true,
           {
-            set text(_page_num_size)
             box(
               width: leftm.width,
               if book_left [
@@ -120,7 +122,7 @@
             h(leftm.sep)
             box(
               width: 1fr,
-              if book_left { chap_prefix } else { sect_prefix },
+              text(_main_size, if book_left { chap_prefix } else { sect_prefix }),
             )
             h(rightm.sep)
             box(
@@ -181,6 +183,7 @@
     header-ascent: 30% + 0pt, // default
     numbering: "I",
   )
+
   counter(page).update(1)
 
   // set the font for main texts
@@ -226,20 +229,25 @@
 
   show heading.where(level: 2): it => block(
     below: 1.5em,
-    above: 1.5em,
+    above: 3em,
     {
-      show: wideblock.with(reverse: true)
-      show: block.with(width: 100%, stroke: (bottom: color_palette.primary), outset: (y: .5em))
-      set text(_heading2_size, weight: "bold", font: sans_font, fill: color_palette.primary)
-      counter(heading).display(it.numbering)
-      h(1em)
+      show: wideblock.with(double: true)
+      show: block.with(width: 100%, stroke: (top: color_palette.accent), outset: (y: .5em + 0.5pt))
+      set text(_heading2_size, weight: "bold", font: sans_font, fill: color_palette.accent)
+      box(
+        outset: (y: .5em),
+        inset: (x: 1em),
+        fill: color_palette.accent,
+        text(white, counter(heading).display(it.numbering)),
+      )
+      h(.5em)
       it.body
     },
   )
 
   show heading.where(level: 3): it => {
     show: block.with(above: 1.5em, below: 1em)
-    set text(weight: "bold", font: sans_font, fill: color_palette.primary)
+    set text(weight: "bold", font: sans_font, fill: color_palette.accent)
     [\u{258C}#it.body]
   }
 
@@ -287,7 +295,7 @@
   set par(leading: 1em, spacing: 0.5em)
 
   show outline.entry.where(level: 1): it => {
-    set text(font: config.sans_font, weight: "bold", fill: color_palette.primary)
+    set text(font: config.sans_font, weight: "bold", fill: color_palette.accent)
     set block(above: 1.25em)
     let prefix = if it.element.numbering == none { none } else if config.lang == "zh" {
       it.element.supplement + it.prefix()
@@ -326,7 +334,6 @@
   let marginalia_config = (
     .._page_geo(page_style),
     book: two_sided,
-    clearance: 8pt,
   )
 
   marginalia.configure(..marginalia_config)
@@ -403,7 +410,9 @@
 
   // reset the counter for the main body
   counter(page).update(1)
+  _state.update("body")
   body
+  _state.update("tail")
 }
 
 

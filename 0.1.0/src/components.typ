@@ -78,9 +78,10 @@
 #let current_page() = counter(page).display(page.numbering)
 
 #let color_palette = (
-  primary: blue,
-  secondary: rgb("c6e6e8"),
-  tertiary: rgb("dfecd5"),
+  accent: rgb(177, 95, 34),
+  accent-light: rgb(252, 247, 243),
+  grey: rgb(100, 100, 100),
+  grey-light: rgb(224, 228, 228),
 )
 
 /* Table tools */
@@ -119,7 +120,6 @@
   pagebreak(to: "odd", weak: true)
 }
 
-
 #let styled_heading(kind: none, lineskip: none, text_size: none, config: none) = it => {
   counter(math.equation).update(0)
   counter(figure.where(kind: table)).update(0)
@@ -128,14 +128,14 @@
   pagebreak(weak: true)
 
   set par(spacing: lineskip, first-line-indent: 0pt, justify: false)
-  set text(weight: "bold", size: text_size, fill: color_palette.primary)
+  set text(weight: "bold", size: text_size, fill: color_palette.accent)
   set align(right)
 
   show: pad.with(top: 1.5cm, bottom: 1em)
   let frame = block.with(
     spacing: text_size,
     width: 100%,
-    stroke: (right: 0.5em + color_palette.primary),
+    stroke: (right: 0.5em + color_palette.accent),
     outset: (right: -0.25em),
     inset: (right: 1em, y: 0.2em),
   )
@@ -155,7 +155,7 @@
     ] else if lang == "ja" [
       第 #default_num 章
     ] else if lang == "zh" [
-      #set text(fill: color_palette.primary.transparentize(50%))
+      #set text(fill: color_palette.accent.transparentize(50%))
       第#h(.25em)#text(2em, head_num.display("一"))
     ]
 
@@ -174,7 +174,7 @@
     ] else if lang == "ja" [
       #it.supplement~#default_num
     ] else if lang == "zh" [
-      #set text(fill: color_palette.primary.transparentize(50%))
+      #set text(fill: color_palette.accent.transparentize(50%))
       #text(luma(50%), appendix_pre)#h(.25em)#default_num
     ]
     let line2 = upper(it.body)
