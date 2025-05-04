@@ -135,9 +135,11 @@
         place(
           top,
           dy: _page_top_margin(page_style),
-          note(
+          marginalia.note(
             numbered: false,
             shift: false,
+            text-style: note_text_style,
+            par-style: note_par_style,
             context {
               let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
               let book_left = book and is_even_page()
@@ -222,19 +224,22 @@
     config: config,
   )
 
-  show heading.where(level: 2): it => {
-    show: block.with(spacing: _heading2_size)
-    set text(_heading2_size, weight: "bold", font: sans_font, fill: color_palette.primary)
-    v(_main_size)
-    counter(heading).display(it.numbering)
-    h(1em)
-    it.body
-  }
+  show heading.where(level: 2): it => block(
+    below: 1.5em,
+    above: 1.5em,
+    {
+      show: wideblock.with(reverse: true)
+      show: block.with(width: 100%, stroke: (bottom: color_palette.primary), outset: (y: .5em))
+      set text(_heading2_size, weight: "bold", font: sans_font, fill: color_palette.primary)
+      counter(heading).display(it.numbering)
+      h(1em)
+      it.body
+    },
+  )
 
   show heading.where(level: 3): it => {
-    show: block.with(spacing: _heading3_size)
-    set text(weight: 500, font: sans_font, fill: color_palette.primary)
-    v(0.5 * _main_size)
+    show: block.with(above: 1.5em, below: 1em)
+    set text(weight: "bold", font: sans_font, fill: color_palette.primary)
     [\u{258C}#it.body]
   }
 
@@ -378,7 +383,9 @@
     it
     place(
       top,
-      note(
+      marginalia.note(
+        text-style: note_text_style,
+        par-style: note_par_style,
         numbered: false,
         shift: false,
         dy: 1.5cm,
@@ -427,5 +434,4 @@
     body
   }
 }
-
 

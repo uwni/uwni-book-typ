@@ -53,3 +53,7 @@
     outline: _outline.with(config),
   )
 }
+
+
+// reexport
+#import "packages/marginalia.typ": *

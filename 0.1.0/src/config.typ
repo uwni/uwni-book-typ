@@ -2,8 +2,8 @@
   en: (
     lang: "en",
     appendix: (supplement: "Appendix", numbering: "A.1"),
-    title_font: ("TeX Gyre Heros", "尙古黑體SC"),
-    sans_font: ("TeX Gyre Heros", "尙古黑體SC"),
+    title_font: ("Libertinus Sans", "尙古黑體SC"),
+    sans_font: ("Libertinus Sans", "尙古黑體SC"),
     serif_font: ("Libertinus Serif", "尙古明體SC"),
     math_font: "TeX Gyre Pagella Math",
     mono_font: "IBM Plex Mono",
