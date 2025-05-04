@@ -1,14 +1,3 @@
-
-#import "../packages.typ": marginalia // import package
-
-#let note_text_style = (size: 9.35pt, style: "normal", weight: "regular")
-#let note_par_style = (spacing: 1.2em, leading: 0.5em, hanging-indent: 0pt)
-
-#let note = marginalia.note.with(text-style: note_text_style, par-style: note_par_style)
-#let figurenote = marginalia.notefigure.with(text-style: note_text_style, par-style: note_par_style)
-#let wideblock = marginalia.wideblock
-
-
 #let watermark(
   body,
   padding: 4em,

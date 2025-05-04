@@ -1,5 +1,5 @@
 #import "components.typ": *
-#import "../packages.typ": *
+#import "../packages/marginalia.typ": *
 
 /// text properties for the main body
 #let _main_size = 11pt
@@ -8,50 +8,20 @@
 #let _eq_spacing = 1em
 #let _figure_spacing = 1.5em
 #let _heading1_size = 24pt
-#let _heading2_size = 16pt
+#let _heading2_size = 15pt
 #let _heading3_size = 1.2 * _main_size
-#let _page_top_margin(page_style) = if page_style == "top" { 2.5cm } else { 1.5cm }
+#let _page_top_margin(page_style) = if page_style == "top" { 32mm } else { 16mm } + _main_size
 #let _page_bottom_margin = 2cm
 #let _page_num_size = 15pt
 #let _page_geo(page_style) = (
   inner: (far: 20mm, width: 0mm, sep: 0mm),
-  outer: (far: 20mm, width: 40mm, sep: 7.5mm),
+  outer: (far: 20mm, width: 40mm, sep: 8mm),
   top: _page_top_margin(page_style),
   bottom: _page_bottom_margin,
-  clearance: 8pt,
+  clearance: _main_size * 0.85,
 )
-
 // for the "book" weights of NCM font
-#let default_weight = 400
-#let _outline(config, ..args) = {
-  set outline(indent: auto, depth: 2)
-  set outline(title: config.toc) if "toc" in config
-  let outline_marginalia_config = (
-    inner: (far: 20mm, width: 0mm, sep: 10mm),
-    outer: (far: 20mm, width: 0mm, sep: 10mm),
-    bottom: _page_bottom_margin,
-    // book: two_sided,
-  )
-  marginalia.configure(..outline_marginalia_config)
-  set page(..marginalia.page-setup(..outline_marginalia_config))
-  set par(leading: 1em, spacing: 0.5em)
-
-  show outline.entry.where(level: 1): it => {
-    set text(font: config.sans_font, weight: "bold", fill: color_palette.primary)
-    set block(above: 1.25em)
-    let prefix = if it.element.numbering == none { none } else if config.lang == "zh" {
-      it.element.supplement + it.prefix()
-    }
-    let body = upper(it.body() + h(1fr) + it.page())
-    link(
-      it.element.location(),
-      it.indented(prefix, body),
-    )
-  }
-  heading(outlined: false, numbering: none, "Contents", depth: 1)
-  columns(2, [#outline(..args, title: none)#v(1pt)])
-  justify_page()
-}
+#let _default_weight = 400
 
 #let template(
   config,
@@ -215,14 +185,14 @@
   set text(
     size: _main_size,
     font: serif_font,
-    weight: default_weight,
+    weight: _default_weight,
     lang: lang,
     region: config.at("region", default: none),
   )
 
   /*-- Math Related --*/
   set math.equation(numbering: num => numbering("(1.1)", counter(heading).get().first(), num))
-  show math.equation: set text(font: math_font, weight: default_weight, features: ("cv01",))
+  show math.equation: set text(font: math_font, weight: _default_weight, features: ("cv01",))
   show math.equation: set block(spacing: _eq_spacing)
   show math.equation: it => {
     if it.block {
@@ -297,6 +267,35 @@
 
   /// Main body.
   body
+}
+
+#let _outline(config, ..args) = {
+  set outline(indent: auto, depth: 2)
+  set outline(title: config.toc) if "toc" in config
+  let outline_marginalia_config = (
+    inner: (far: 20mm, width: 0mm, sep: 8mm),
+    outer: (far: 20mm, width: 0mm, sep: 8mm),
+    // book: two_sided,
+  )
+  marginalia.configure(..outline_marginalia_config)
+  set page(..marginalia.page-setup(..outline_marginalia_config))
+  set par(leading: 1em, spacing: 0.5em)
+
+  show outline.entry.where(level: 1): it => {
+    set text(font: config.sans_font, weight: "bold", fill: color_palette.primary)
+    set block(above: 1.25em)
+    let prefix = if it.element.numbering == none { none } else if config.lang == "zh" {
+      it.element.supplement + it.prefix()
+    }
+    let body = upper(it.body() + h(1fr) + it.page())
+    link(
+      it.element.location(),
+      it.indented(prefix, body),
+    )
+  }
+  heading(outlined: false, numbering: none, "Contents", depth: 1)
+  columns(2, [#outline(..args, title: none)#v(1pt)])
+  justify_page()
 }
 
 /// weak: if false, a pagebreak will be added after the body

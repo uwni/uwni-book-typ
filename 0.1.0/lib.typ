@@ -3,11 +3,11 @@
 
 // re-export the following modules
 #import "src/components.typ"
-#import "src/environments.typ"
+#import "packages/theorion.typ" as environments
 
 #let config_isct(
   config: "en",
-  title: (ja: [], zh:[], en: []),
+  title: (ja: [], zh: [], en: []),
   author: "[Author]",
   department: "[Department]",
   date: datetime.today(),
@@ -16,14 +16,13 @@
   page_style: "side",
   title_style: "[title_style]",
 ) = {
-  
   let config = if type(config) == str {
     import "src/config.typ": config as default_config
     default_config.at(config, default: [])
   } else if type(config) == dictionary {
     config
   }
-  
+
   import "src/template.typ": *
   import "src/titlepage.typ": titlepage
 
