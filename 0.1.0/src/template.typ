@@ -1,11 +1,6 @@
 #import "components.typ": *
 #import "../packages/marginalia.typ": *
 
-// 0: head
-// 1: body
-// 2: tail
-#let _state = state("_status", "head")
-
 /// text properties for the main body
 #let _main_size = 11pt
 #let _lineskip = 0.75em
@@ -18,15 +13,27 @@
 #let _page_top_margin(page_style) = if page_style == "top" { 20mm } else { 16mm } + _main_size
 #let _page_bottom_margin = 2cm
 #let _page_num_size = 15pt
+#let _page_margin = 15mm
 #let _page_geo(page_style) = (
-  inner: (far: 20mm, width: 0mm, sep: 0mm),
-  outer: (far: 20mm, width: 40mm, sep: 8mm),
+  inner: (far: _page_margin, width: 0mm, sep: 0mm),
+  outer: (far: _page_margin, width: 40mm, sep: 8mm),
   top: _page_top_margin(page_style),
   bottom: _page_bottom_margin,
   clearance: _main_size,
 )
+#let _chap_top_margin = 100mm
 // for the "book" weights of NCM font
 #let _default_weight = 400
+#let _subheading_size = 13pt
+
+
+#let _pre_chapter() = {
+  counter(math.equation).update(0)
+  counter(figure.where(kind: table)).update(0)
+  counter(figure.where(kind: image)).update(0)
+  counter(figure.where(kind: raw)).update(0)
+  pagebreak(weak: true)
+}
 
 #let template(
   config,
@@ -67,6 +74,7 @@
   let marginalia_config = (
     .._page_geo(page_style),
     book: two_sided,
+    numbering: (..i) => super(numbering("1", ..i)),
   )
 
   marginalia.configure(..marginalia_config)
@@ -75,11 +83,6 @@
     // explicitly set the paper
     paper: "a4",
     ..marginalia.page-setup(..marginalia_config),
-    //for draft
-    background: context if is_starting() and _state.get() == "body" {
-      let img = block(chap_imgs.at(counter(heading).get().at(0)), clip: true, width: 100%, height: 20em,)
-      place(top, img)
-    },
     header: context if not is_starting() and current_chapter() != none {
       marginalia.notecounter.update(0)
       let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
@@ -211,21 +214,23 @@
     }
   }
   // set paragraph style
-  set par(leading: _lineskip, spacing: _parskip, first-line-indent: 2em, justify: true)
+  set par(leading: _lineskip, spacing: _parskip, first-line-indent: 1em, justify: true)
   show raw: set text(font: mono_font, weight: "regular")
 
   set heading(numbering: "1.1")
   set heading(supplement: it => if it.depth == 1 [Chapter] else [Section]) if lang == "en"
   set heading(supplement: "章") if lang == "ja"
   set heading(supplement: config.chapter) if lang == "zh"
-
-  /* ---- Customization of Chap. Heading ---- */
-  show heading.where(level: 1): styled_heading(
-    kind: "chapter",
-    lineskip: _lineskip,
-    text_size: _heading1_size,
-    config: config,
-  )
+  show heading.where(level: 1): it => {
+    _pre_chapter()
+    wideblock(
+      standalone_heading(
+        config: config,
+        top_margin: _page_top_margin(page_style),
+        it,
+      ),
+    )
+  }
 
   show heading.where(level: 2): it => block(
     below: 1.5em,
@@ -247,8 +252,8 @@
 
   show heading.where(level: 3): it => {
     show: block.with(above: 1.5em, below: 1em)
-    set text(weight: "bold", font: sans_font, fill: color_palette.accent)
-    [\u{258C}#it.body]
+    set text(weight: 600, font: sans_font, fill: black, tracking: 0.07em)
+    upper(it.body)
   }
 
 
@@ -286,13 +291,13 @@
   set outline(indent: auto, depth: 2)
   set outline(title: config.toc) if "toc" in config
   let outline_marginalia_config = (
-    inner: (far: 20mm, width: 0mm, sep: 8mm),
-    outer: (far: 20mm, width: 0mm, sep: 8mm),
+    inner: (far: _page_margin, width: 0mm, sep: 8mm),
+    outer: (far: _page_margin, width: 0mm, sep: 8mm),
     // book: two_sided,
   )
-  marginalia.configure(..outline_marginalia_config)
-  set page(..marginalia.page-setup(..outline_marginalia_config))
+  set page(..marginalia.page-setup(..outline_marginalia_config), header: none)
   set par(leading: 1em, spacing: 0.5em)
+  marginalia.configure(..outline_marginalia_config)
 
   show outline.entry.where(level: 1): it => {
     set text(font: config.sans_font, weight: "bold", fill: color_palette.accent)
@@ -306,21 +311,12 @@
       it.indented(prefix, body),
     )
   }
-  heading(outlined: false, numbering: none, "Contents", depth: 1)
+  toc_heading(config: config, heading(outlined: false, numbering: none, "Contents", depth: 1))
   columns(2, [#outline(..args, title: none)#v(1pt)])
   justify_page()
 }
 
-/// weak: if false, a pagebreak will be added after the body
-#let standalone(config) = (weak: false, ..args) => body => {
-  heading(supplement: none, numbering: none, ..args)
-
-  body
-  if not weak {
-    justify_page()
-  }
-}
-#let mainbody(body, config, two_sided, page_style) = {
+#let mainbody(body, config, two_sided, page_style, chap_imgs) = {
   let (
     serif_font,
     sans_font,
@@ -340,8 +336,47 @@
 
   set page(
     ..marginalia.page-setup(..marginalia_config),
+    //for draft
+    background: context if is_starting() {
+      let img = block(
+        chap_imgs.at(counter(heading).get().at(0)),
+        clip: true,
+        width: 100%,
+        height: _chap_top_margin,
+        radius: (bottom-right: _page_margin),
+      )
+      place(top, img)
+    },
     numbering: "1", // setup margins:
   )
+
+  show heading.where(level: 1): it => {
+    _pre_chapter()
+    wideblock(
+      double: true,
+      fancy_chapter_heading(
+        config: config,
+        top_margin: _page_top_margin(page_style),
+        chap_top_margin: _chap_top_margin,
+        it,
+      ),
+    )
+    marginalia.note(
+      text-style: note_text_style,
+      par-style: note_par_style,
+      numbered: false,
+      shift: false,
+      keep-order: true,
+      {
+        let nexth2 = heading.where(level: 2).after(here())
+        let nexth1 = heading.where(level: 1, outlined: true).after(here(), inclusive: false)
+        if query(nexth2.before(nexth1)) != () {
+          block(spacing: 1em, [*Sections*])
+        }
+        outline(target: nexth2.before(nexth1), indent: n => (n - 1) * 1em, depth: 2, title: none)
+      },
+    )
+  }
 
   /* ---- Customization of Table&Image ---- */
   set figure(
@@ -386,39 +421,17 @@
   show figure.where(kind: table): set figure(supplement: config.table) if "table" in config
   show figure.where(kind: image): set figure(supplement: config.figure) if "figure" in config
 
-  show heading.where(level: 1): it => {
-    it
-    place(
-      top,
-      marginalia.note(
-        text-style: note_text_style,
-        par-style: note_par_style,
-        numbered: false,
-        shift: false,
-        dy: 1.5cm,
-        {
-          let nexth2 = heading.where(level: 2).after(here())
-          let nexth1 = heading.where(level: 1, outlined: true).after(here(), inclusive: false)
-          if query(nexth2.before(nexth1)) != () {
-            block(spacing: 1em, [*Contents*])
-          }
-          outline(target: nexth2.before(nexth1), indent: n => (n - 1) * 1em, depth: 2, title: none)
-        },
-      ),
-    )
-  }
-
   // reset the counter for the main body
   counter(page).update(1)
-  _state.update("body")
+  counter(heading).update(0)
   body
-  _state.update("tail")
 }
 
 
 // TODO: specify the appendix heading
-#let appendix(config) = body => {
+#let appendix(config, page_style, body) = {
   justify_page()
+
   let (supplement, numbering: _numbering) = config.appendix
   context {
     let offset = counter(heading).get().first()
@@ -432,15 +445,51 @@
         },
       ),
     )
-
-    show heading.where(level: 1): styled_heading(
-      kind: "appendix",
-      lineskip: _lineskip,
-      text_size: _heading1_size,
-      config: config,
-    )
+    pagebreak()
+    show heading.where(level: 1): it => {
+      _pre_chapter()
+      wideblock(
+        appendix_heading(
+          config: config,
+          top_margin: _page_top_margin(page_style),
+          chap_top_margin: _chap_top_margin,
+          it,
+        ),
+      )
+    }
 
     body
   }
 }
 
+#let subheading(config, body) = {
+  set par(leading: 0.5em)
+  v(0pt, weak: true)
+  block(text(font: config.sans_font, _subheading_size, style: "italic", weight: 500, black, body))
+  v(_lineskip)
+}
+
+
+#let emphblock(config, body) = {
+  show heading.where(level: 1): it => {
+    set text(font: config.sans_font, weight: 500, tracking: 0.07em, size: _main_size, fill: color_palette.accent)
+    show text: upper
+    block(it.body, spacing: 1em)
+  }
+
+  block(fill: color_palette.accent-light, width: 100%, inset: 1em, radius: (top-left: 0pt, rest: 1em), body)
+}
+
+#let subblock(config, body) = {
+  show heading.where(level: 1): it => {
+    set text(font: config.sans_font, weight: 500, tracking: 0.07em, size: _main_size, fill: black)
+    show text: upper
+    block(it.body, spacing: 1em)
+  }
+  block(
+    stroke: (left: (thickness: 1.2pt, paint: color_palette.accent, dash: "densely-dashed")),
+    width: 100%,
+    inset: (right: 0pt, rest: 0.75em),
+    body,
+  )
+}

@@ -2,7 +2,7 @@
 /// entrypoint for the library
 
 // re-export the following modules
-#import "src/components.typ"
+#import "src/components.typ": *
 #import "packages/theorion.typ" as environments
 
 #let config_isct(
@@ -49,13 +49,14 @@
       date,
       draft,
     ),
-    appendix: appendix(config),
-    standalone: standalone(config),
-    mainbody: body => mainbody(body, config, two_sided, page_style),
+    appendix: appendix.with(config, page_style),
+    mainbody: body => mainbody(body, config, two_sided, page_style, chap_imgs),
     outline: _outline.with(config),
+    subheading: subheading.with(config),
+    emphblock: emphblock.with(config),
+    subblock: subblock.with(config),
   )
 }
-
 
 // reexport
 #import "packages/marginalia.typ": *

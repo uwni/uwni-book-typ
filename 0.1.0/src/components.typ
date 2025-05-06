@@ -78,8 +78,8 @@
 #let current_page() = counter(page).display(page.numbering)
 
 #let color_palette = (
-  accent: rgb(177, 95, 34),
-  accent-light: rgb(252, 247, 243),
+  accent: rgb(85, 117, 137),
+  accent-light: rgb(246, 248, 249),
   grey: rgb(100, 100, 100),
   grey-light: rgb(224, 228, 228),
 )
@@ -120,7 +120,7 @@
   pagebreak(to: "odd", weak: true)
 }
 
-#let styled_heading(kind: none, lineskip: none, text_size: none, config: none) = it => {
+#let styled_heading_1(kind: none, lineskip: none, text_size: none, config: none, it) = {
   counter(math.equation).update(0)
   counter(figure.where(kind: table)).update(0)
   counter(figure.where(kind: image)).update(0)
@@ -131,7 +131,6 @@
   set text(weight: "bold", size: text_size, fill: color_palette.accent)
   set align(right)
 
-  show: pad.with(top: 1.5cm, bottom: 1em)
   let frame = block.with(
     spacing: text_size,
     width: 100%,
@@ -143,6 +142,7 @@
   let (lang, appendix: (supplement: appendix_pre), ..) = config
 
   if it.numbering == none {
+    show: pad.with(top: 10mm, bottom: 1em)
     frame(upper(it.body))
     return
   }
@@ -150,6 +150,8 @@
   let head_num = counter(heading)
   let default_num = text(1.5em, head_num.display(it.numbering))
   if kind == "chapter" {
+    show: pad.with(top: 80mm, bottom: 1em)
+
     let line1 = if lang == "en" [
       #smallcaps(it.supplement)~#default_num
     ] else if lang == "ja" [
@@ -169,6 +171,7 @@
   }
 
   if kind == "appendix" {
+    show: pad.with(top: 10mm, bottom: 1em)
     let line1 = if lang == "en" [
       #smallcaps(it.supplement)~#default_num
     ] else if lang == "ja" [
@@ -182,3 +185,68 @@
     return
   }
 }
+
+#let standalone_heading(config: none, top_margin: 0pt, it) = {
+  let heading_size = 26pt
+  let lineskip = 0.6 * heading_size
+  set par(first-line-indent: 0pt, justify: false, leading: lineskip)
+  set text(heading_size, font: config.sans_font, weight: "bold", fill: color_palette.accent, tracking: 0.06em)
+  show text: upper
+  v(-top_margin)
+  block(fill: color_palette.accent, height: (top_margin), hide(it.body)) + v(10pt) + it.body
+  v(lineskip)
+}
+
+#let toc_heading(config: none, it) = {
+  let heading_size = 36pt
+  let lineskip = 0.6 * heading_size
+  set par(first-line-indent: 0pt, justify: false, leading: lineskip)
+  set text(heading_size, font: config.sans_font, weight: "bold", fill: color_palette.accent, tracking: 0.06em)
+  show text: upper
+  it.body
+  v(lineskip)
+}
+
+#let fancy_chapter_heading(config: none, top_margin: 0pt, chap_top_margin: 0pt, it) = {
+  let heading_size = 26pt
+  let lineskip = 0.7 * heading_size
+  set par(first-line-indent: 0pt, justify: false, leading: lineskip)
+  set text(font: config.sans_font, weight: "bold", fill: color_palette.accent, tracking: 0.06em)
+
+  let (lang, appendix: (supplement: appendix_pre), ..) = config
+
+  let head_num = counter(heading)
+  let default_num = text(white, head_num.display(it.numbering))
+  set text(fill: color_palette.accent, heading_size)
+  v(-top_margin + chap_top_margin + heading_size)
+  stack(
+    dir: ltr,
+    spacing: 10pt,
+    block(
+      fill: color_palette.accent,
+      inset: (x: 10pt),
+      outset: (top: chap_top_margin + heading_size, bottom: 10pt),
+      default_num,
+    ),
+    upper(it.body),
+  )
+
+  v(lineskip)
+}
+
+#let appendix_heading(config: none, top_margin: 0pt, chap_top_margin: 0pt, it) = {
+  let prefix_size = 20pt
+  let heading_size = 26pt
+  let lineskip = 0.6 * heading_size
+  set par(first-line-indent: 0pt, justify: false, leading: lineskip)
+  set text(font: config.sans_font, weight: "bold", fill: color_palette.accent, tracking: 0.06em)
+  show text: upper
+  let prefix = text(prefix_size, config.appendix.supplement + h(.5em) + counter(heading).display(it.numbering))
+  v(-top_margin)
+  block(fill: color_palette.accent, height: (top_margin), inset: (x: 10pt), align(bottom, text(white, prefix)))
+  block(h(10pt) + text(heading_size, it.body))
+  v(lineskip)
+}
+
+
+
