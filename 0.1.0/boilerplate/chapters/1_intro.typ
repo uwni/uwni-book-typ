@@ -1,18 +1,29 @@
 #import "../packages.typ": *
 #import "../defs.typ": *
-#import environments: *
 
 = 辯理
 $R$ 二元謂語也，$phi$ 公式也，$x$ 變元也，$a$ 變元若常符也，對於一類常見的公式 $forall x (x R a -> phi)$，可以簡寫爲 $(forall x R a) phi$。
 #note[#lorem(10)]
 
-$ tack.r.double  $
+#example[
+  dfdasf
+  sdf
+
+  $ tack.r.double $
+
+]
+
 
 = 集論
 
-hahaha
+#lorem(400)
 
 == ZFC 公理
+// #emphblock[
+//   dsfaf
+//   df
+// ]
+
 == 交集
 $
   A union B = {x | x in A or x in B}

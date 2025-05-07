@@ -1,6 +1,5 @@
 #import "../packages.typ": *
 #import "../defs.typ": *
-#import environments: *
 
 = 數域 <chap>
 

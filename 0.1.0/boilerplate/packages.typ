@@ -11,10 +11,6 @@
   titlepage,
   mainbody,
   appendix,
-  outline,
-  subheading,
-  emphblock,
-  subblock,
 ) = config_isct(
   // ["en"|"ja"]
   config: "en",

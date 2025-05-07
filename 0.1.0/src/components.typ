@@ -1,3 +1,5 @@
+#import "config.typ": *
+
 #let watermark(
   body,
   padding: 4em,
@@ -193,7 +195,7 @@
   tracking: 0.07em,
 )
 
-#let _toc_heading(config: none, it) = {
+#let _toc_heading(it) = {
   let heading_size = 36pt
   let lineskip = 0.8 * heading_size
   set par(first-line-indent: 0pt, justify: false, leading: lineskip)
@@ -203,13 +205,12 @@
   v(lineskip)
 }
 
-#let _fancy_chapter_heading(config: none, top_margin: 0pt, chap_top_margin: 0pt, it) = {
+#let _fancy_chapter_heading(top_margin: 0pt, chap_top_margin: 0pt, it) = {
   let heading_size = 26pt
   let lineskip = 0.7 * heading_size
   set par(leading: lineskip)
-  set text(size: heading_size, .._heading_text_style(config.sans_font))
+  set text(size: heading_size, .._heading_text_style(_sans_font))
 
-  let (lang, appendix: (supplement: appendix_pre), ..) = config
   let head_num = counter(heading)
   let default_num = text(white, head_num.display(it.numbering))
 
@@ -229,11 +230,11 @@
   v(lineskip)
 }
 
-#let _standalone_heading(config: none, top_margin: 0pt, it) = {
+#let _standalone_heading(top_margin: 0pt, it) = {
   let heading_size = 26pt
   let lineskip = 0.6 * heading_size
   set par(first-line-indent: 0pt, justify: false, leading: lineskip)
-  set text(size: heading_size, .._heading_text_style(config.sans_font))
+  set text(size: heading_size, .._heading_text_style(_sans_font))
   show text: upper
   v(-top_margin)
   block(fill: color_palette.accent, height: top_margin, spacing: heading_size, hide(it.body))
@@ -241,15 +242,15 @@
   v(lineskip)
 }
 
-#let _appendix_heading(config: none, top_margin: 0pt, chap_top_margin: 0pt, it) = {
+#let _appendix_heading(top_margin: 0pt, chap_top_margin: 0pt, it) = {
   let prefix_size = 20pt
   let heading_size = 26pt
   let lineskip = 0.6 * heading_size
   set par(first-line-indent: 0pt, justify: false, spacing: lineskip)
-  set text(size: heading_size, .._heading_text_style(config.sans_font))
+  set text(size: heading_size, .._heading_text_style(_sans_font))
 
   show text: upper
-  let prefix = text(prefix_size, config.appendix.supplement + h(.5em) + counter(heading).display(it.numbering))
+  let prefix = text(prefix_size, _appendix.supplement + h(.5em) + counter(heading).display(it.numbering))
   v(-top_margin)
   block(
     fill: color_palette.accent,

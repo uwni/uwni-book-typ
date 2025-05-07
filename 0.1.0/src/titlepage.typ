@@ -1,12 +1,12 @@
+#import "config.typ": *
+
 #let book_title(
-  config,
   title,
   author,
   department,
   date,
   draft,
 ) = {
-  let (serif_font, sans_font, title_font, date_format, lang) = config
   set page(
     // explicitly set the paper
     background: image("assets/background.svg", width: 100%),
@@ -15,11 +15,11 @@
   )
 
   set par(first-line-indent: 0pt, leading: 1em, spacing: 1em)
-  set text(13.75pt, weight: 450, font: serif_font, lang: lang)
+  set text(13.75pt, weight: 450, font: _serif_font, lang: _lang)
   set align(right)
 
   let large = text.with(16.5pt)
-  let title_text = text.with(22pt, font: title_font, weight: 600)
+  let title_text = text.with(22pt, font: _title_font, weight: 600)
   let title_cn_text = text.with(32pt, font: "FZZJ-XHLSHUJF", weight: 600)
 
   let author_en = if type(author) == dictionary {
@@ -41,7 +41,7 @@
   [
     #par(justify: false)[
       #title_text(title.en, lang: "en")\
-      #title_cn_text(title.at(lang, default: none), lang: lang)
+      #title_cn_text(title.at(_lang, default: none), lang: _lang)
     ]
 
     #v(1fr)
@@ -61,7 +61,7 @@
     ]
 
     #v(1fr)
-    #date.display(date_format)
+    #date.display(_date_format)
     #v(1fr)
     #align(left, image("assets/SVG/アセット 4.svg", width: 25%))
   ]

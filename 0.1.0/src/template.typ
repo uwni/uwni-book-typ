@@ -1,32 +1,9 @@
 #import "components.typ": *
 #import "../packages/marginalia.typ": *
+#import "config.typ" as _config
+#import _config: *
 
 /// text properties for the main body
-#let _main_size = 11pt
-#let _lineskip = 0.75em
-#let _parskip = _lineskip //1.2em
-#let _eq_spacing = 1em
-#let _figure_spacing = 1.5em
-#let _heading1_size = 24pt
-#let _heading2_size = 15pt
-#let _heading3_size = 1.2 * _main_size
-#let _page_top_margin(page_style) = if page_style == "top" { 20mm } else { 16mm } + _main_size
-#let _page_bottom_margin = 2cm
-#let _page_num_size = 15pt
-#let _page_margin = 15mm
-#let _page_geo(page_style) = (
-  inner: (far: _page_margin, width: 0mm, sep: 0mm),
-  outer: (far: _page_margin, width: 40mm, sep: 8mm),
-  top: _page_top_margin(page_style),
-  bottom: _page_bottom_margin,
-  clearance: _main_size,
-)
-#let _chap_top_margin = 100mm
-// for the "book" weights of NCM font
-#let _default_weight = 400
-#let _subheading_size = 13pt
-
-
 #let _pre_chapter() = {
   counter(math.equation).update(0)
   counter(figure.where(kind: table)).update(0)
@@ -36,7 +13,6 @@
 }
 
 #let template(
-  config,
   title,
   author,
   date,
@@ -47,16 +23,9 @@
   body,
 ) = {
   ///utilities
-  let (
-    serif_font,
-    sans_font,
-    math_font,
-    mono_font,
-    lang,
-  ) = config
 
-  let sans = text.with(font: sans_font)
-  let italic = if "italic_font" in config { text.with(font: { config.italic_font }) } else { text }
+  let sans = text.with(font: _sans_font)
+  let italic = if "_italic_font" in dictionary(_config) { text.with(font: { _italic_font }) } else { text }
   let semi = text.with(weight: "semibold")
 
   /// Set the document's basic properties.
@@ -107,7 +76,7 @@
         right
       }
       set align(x_alignmnent)
-      set text(font: sans_font)
+      set text(font: _sans_font)
 
       if page_style == "top" {
         let leftm = marginalia.get-left()
@@ -193,15 +162,16 @@
   // set the font for main texts
   set text(
     size: _main_size,
-    font: serif_font,
+    font: _serif_font,
     weight: _default_weight,
-    lang: lang,
-    region: config.at("region", default: none),
+    lang: _lang,
   )
+
+  set text(_region) if "_region" in dictionary(_config)
 
   /*-- Math Related --*/
   set math.equation(numbering: num => numbering("(1.1)", counter(heading).get().first(), num))
-  show math.equation: set text(font: math_font, weight: _default_weight, features: ("cv01",))
+  show math.equation: set text(font: _math_font, weight: _default_weight, features: ("cv01",))
   show math.equation: set block(spacing: _eq_spacing)
   show math.equation: it => {
     if it.block {
@@ -216,17 +186,16 @@
   }
   // set paragraph style
   set par(leading: _lineskip, spacing: _parskip, first-line-indent: 1em, justify: true)
-  show raw: set text(font: mono_font, weight: "regular")
+  show raw: set text(font: _mono_font, weight: "regular")
 
   set heading(numbering: "1.1")
-  set heading(supplement: it => if it.depth == 1 [Chapter] else [Section]) if lang == "en"
-  set heading(supplement: "章") if lang == "ja"
-  set heading(supplement: config.chapter) if lang == "zh"
+  set heading(supplement: it => if it.depth == 1 [Chapter] else [Section]) if _lang == "en"
+  set heading(supplement: "章") if _lang == "ja"
+  set heading(supplement: config.chapter) if _lang == "zh"
   show heading.where(level: 1): it => {
     _pre_chapter()
     wideblock(
       _standalone_heading(
-        config: config,
         top_margin: _page_top_margin(page_style),
         it,
       ),
@@ -239,7 +208,7 @@
     {
       show: wideblock.with(double: true)
       show: block.with(width: 100%, stroke: (top: color_palette.accent), outset: (y: .5em + 0.5pt))
-      set text(_heading2_size, weight: "bold", font: sans_font, fill: color_palette.accent)
+      set text(_heading2_size, weight: "bold", font: _sans_font, fill: color_palette.accent)
       box(
         outset: (y: .5em),
         inset: (x: 1em),
@@ -253,7 +222,7 @@
 
   show heading.where(level: 3): it => {
     show: block.with(above: 1.5em, below: 1em)
-    set text(weight: 600, font: sans_font, fill: black, tracking: 0.07em)
+    set text(weight: 600, font: _sans_font, fill: black, tracking: 0.07em)
     upper(it.body)
   }
 
@@ -317,16 +286,8 @@
   justify_page()
 }
 
-#let mainbody(body, config, two_sided, page_style, chap_imgs) = {
-  let (
-    serif_font,
-    sans_font,
-    math_font,
-    mono_font,
-    lang,
-  ) = config
-
-  let sans = text.with(font: sans_font)
+#let mainbody(body, two_sided, page_style, chap_imgs) = {
+  let sans = text.with(font: _sans_font)
 
   let marginalia_config = (
     .._page_geo(page_style),
@@ -339,14 +300,16 @@
     ..marginalia.page-setup(..marginalia_config),
     //for draft
     background: context if is_starting() {
-      let img = block(
-        chap_imgs.at(counter(heading).get().at(0)),
-        clip: true,
-        width: 100%,
-        height: _chap_top_margin,
-        radius: (bottom-right: _page_margin),
+      place(
+        top,
+        block(
+          chap_imgs.at(counter(heading).get().at(0)),
+          clip: true,
+          width: 100%,
+          height: _chap_top_margin,
+          radius: (bottom-right: _page_margin),
+        ),
       )
-      place(top, img)
     },
     numbering: "1", // setup margins:
   )
@@ -356,7 +319,6 @@
     wideblock(
       double: true,
       _fancy_chapter_heading(
-        config: config,
         top_margin: _page_top_margin(page_style),
         chap_top_margin: _chap_top_margin,
         it,
@@ -419,8 +381,12 @@
   })
 
   set table(stroke: none, align: horizon + center)
-  show figure.where(kind: table): set figure(supplement: config.table) if "table" in config
-  show figure.where(kind: image): set figure(supplement: config.figure) if "figure" in config
+  show figure.where(kind: table): set figure(supplement: _i18n.table) if (
+    "_i18n" in dictionary(_config) and "table" in _i18n
+  )
+  show figure.where(kind: image): set figure(supplement: _i18n.figure) if (
+    "_i18n" in dictionary(_config) and "figure" in _i18n
+  )
 
   // reset the counter for the main body
   counter(page).update(1)
@@ -430,10 +396,10 @@
 
 
 // TODO: specify the appendix heading
-#let appendix(config, page_style, body) = {
+#let appendix(page_style, body) = {
   justify_page()
 
-  let (supplement, numbering: _numbering) = config.appendix
+  let (supplement, numbering: _numbering) = _appendix
   context {
     let offset = counter(heading).get().first()
     set heading(
@@ -451,7 +417,6 @@
       _pre_chapter()
       wideblock(
         _appendix_heading(
-          config: config,
           top_margin: _page_top_margin(page_style),
           chap_top_margin: _chap_top_margin,
           it,
@@ -470,27 +435,3 @@
   v(_lineskip)
 }
 
-
-#let emphblock(config, body) = {
-  show heading.where(level: 1): it => {
-    set text(font: config.sans_font, weight: 500, tracking: 0.07em, size: _main_size, fill: color_palette.accent)
-    show text: upper
-    block(it.body, spacing: 1em)
-  }
-
-  block(fill: color_palette.accent-light, width: 100%, inset: 1em, radius: (top-left: 0pt, rest: 1em), body)
-}
-
-#let subblock(config, body) = {
-  show heading.where(level: 1): it => {
-    set text(font: config.sans_font, weight: 500, tracking: 0.07em, size: _main_size, fill: black)
-    show text: upper
-    block(it.body, spacing: 1em)
-  }
-  block(
-    stroke: (left: (thickness: 1.2pt, paint: color_palette.accent, dash: "densely-dashed")),
-    width: 100%,
-    inset: (right: 0pt, rest: 0.75em),
-    body,
-  )
-}
