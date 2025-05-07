@@ -30,6 +30,7 @@
 
 #let _example_counter = counter("example")
 #let example(body) = subblock[
-  #subblock_heading("Example" + _example_counter.step())
+  #_example_counter.step()
+  #subblock_heading("Example" + h(.5em) + context { [#current_chapter().index.at(0).] + _example_counter.display() })
   #body
 ]
