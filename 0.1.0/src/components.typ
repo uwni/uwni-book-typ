@@ -195,7 +195,7 @@
 
 #let _toc_heading(config: none, it) = {
   let heading_size = 36pt
-  let lineskip = 0.6 * heading_size
+  let lineskip = 0.8 * heading_size
   set par(first-line-indent: 0pt, justify: false, leading: lineskip)
   set text(size: heading_size, .._heading_text_style(config.sans_font))
   show text: upper

@@ -88,7 +88,8 @@
       let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
       let chap_prefix = upper[
         #if chap_idx > 0 {
-          semi[Chapter #chap_idx] + [#h(0.5em, weak: true)•#h(0.5em, weak: true)]
+          set text(color_palette.accent)
+          semi[Chapter#h(.5em)#chap_idx] + [#h(0.5em, weak: true)•#h(0.5em, weak: true)]
         }
         #chap
       ]
@@ -311,7 +312,7 @@
       it.indented(prefix, body),
     )
   }
-  _toc_heading(config: config, heading(outlined: false, numbering: none, "Contents", depth: 1))
+  _toc_heading(config: config, heading(outlined: false, numbering: none, "Table of Contents", depth: 1))
   columns(2, [#outline(..args, title: none)#v(1pt)])
   justify_page()
 }
