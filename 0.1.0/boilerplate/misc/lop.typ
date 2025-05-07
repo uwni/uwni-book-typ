@@ -1,2 +1,1 @@
-#import "../packages.typ": standalone
-#show: standalone[List of publications]
+= List of publications

@@ -13,15 +13,17 @@
 #outline()
 
 // this is necessary before starting your main text
-#show: mainbody
-#include "chapters/1_intro.typ"
-#include "chapters/2_set.typ"
+#mainbody[
+  #include "chapters/1_intro.typ"
+  #include "chapters/2_set.typ"
+]
 
-#show: appendix
-#include "appendices/data.typ"
-#include "appendices/proof.typ"
+#appendix[
+  #include "appendices/data.typ"
+  #include "appendices/proof.typ"
+]
 
-#components.justify_page()
+#justify_page()
 #include "misc/ack.typ"
 #include "misc/lop.typ"
 #include "misc/ref.typ"

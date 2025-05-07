@@ -85,9 +85,9 @@
 )
 
 /* Table tools */
-#let heavyrule = table.hline.with(stroke: 0.08em)
-#let midrule = table.hline.with(stroke: 0.05em)
-#let vline = table.vline(stroke: 0.05em)
+#let heavyrule = table.hline.with(stroke: 0.08em + color_palette.accent)
+#let midrule = table.hline.with(stroke: 0.05em + color_palette.accent)
+#let vline = table.vline(stroke: 0.05em + color_palette.accent)
 
 #let multi-row(eq) = {
   block(
@@ -186,38 +186,33 @@
   }
 }
 
-#let standalone_heading(config: none, top_margin: 0pt, it) = {
-  let heading_size = 26pt
-  let lineskip = 0.6 * heading_size
-  set par(first-line-indent: 0pt, justify: false, leading: lineskip)
-  set text(heading_size, font: config.sans_font, weight: "bold", fill: color_palette.accent, tracking: 0.06em)
-  show text: upper
-  v(-top_margin)
-  block(fill: color_palette.accent, height: (top_margin), hide(it.body)) + v(10pt) + it.body
-  v(lineskip)
-}
+#let _heading_text_style(sans_font) = (
+  font: sans_font,
+  weight: "bold",
+  fill: color_palette.accent,
+  tracking: 0.07em,
+)
 
-#let toc_heading(config: none, it) = {
+#let _toc_heading(config: none, it) = {
   let heading_size = 36pt
   let lineskip = 0.6 * heading_size
   set par(first-line-indent: 0pt, justify: false, leading: lineskip)
-  set text(heading_size, font: config.sans_font, weight: "bold", fill: color_palette.accent, tracking: 0.06em)
+  set text(size: heading_size, .._heading_text_style(config.sans_font))
   show text: upper
   it.body
   v(lineskip)
 }
 
-#let fancy_chapter_heading(config: none, top_margin: 0pt, chap_top_margin: 0pt, it) = {
+#let _fancy_chapter_heading(config: none, top_margin: 0pt, chap_top_margin: 0pt, it) = {
   let heading_size = 26pt
   let lineskip = 0.7 * heading_size
-  set par(first-line-indent: 0pt, justify: false, leading: lineskip)
-  set text(font: config.sans_font, weight: "bold", fill: color_palette.accent, tracking: 0.06em)
+  set par(leading: lineskip)
+  set text(size: heading_size, .._heading_text_style(config.sans_font))
 
   let (lang, appendix: (supplement: appendix_pre), ..) = config
-
   let head_num = counter(heading)
   let default_num = text(white, head_num.display(it.numbering))
-  set text(fill: color_palette.accent, heading_size)
+
   v(-top_margin + chap_top_margin + heading_size)
   stack(
     dir: ltr,
@@ -234,17 +229,36 @@
   v(lineskip)
 }
 
-#let appendix_heading(config: none, top_margin: 0pt, chap_top_margin: 0pt, it) = {
-  let prefix_size = 20pt
+#let _standalone_heading(config: none, top_margin: 0pt, it) = {
   let heading_size = 26pt
   let lineskip = 0.6 * heading_size
   set par(first-line-indent: 0pt, justify: false, leading: lineskip)
-  set text(font: config.sans_font, weight: "bold", fill: color_palette.accent, tracking: 0.06em)
+  set text(size: heading_size, .._heading_text_style(config.sans_font))
+  show text: upper
+  v(-top_margin)
+  block(fill: color_palette.accent, height: top_margin, spacing: heading_size, hide(it.body))
+  it.body
+  v(lineskip)
+}
+
+#let _appendix_heading(config: none, top_margin: 0pt, chap_top_margin: 0pt, it) = {
+  let prefix_size = 20pt
+  let heading_size = 26pt
+  let lineskip = 0.6 * heading_size
+  set par(first-line-indent: 0pt, justify: false, spacing: lineskip)
+  set text(size: heading_size, .._heading_text_style(config.sans_font))
+
   show text: upper
   let prefix = text(prefix_size, config.appendix.supplement + h(.5em) + counter(heading).display(it.numbering))
   v(-top_margin)
-  block(fill: color_palette.accent, height: (top_margin), inset: (x: 10pt), align(bottom, text(white, prefix)))
-  block(h(10pt) + text(heading_size, it.body))
+  block(
+    fill: color_palette.accent,
+    height: top_margin,
+    spacing: heading_size,
+    inset: (x: 10pt),
+    align(bottom, text(white, prefix)),
+  )
+  h(10pt) + text(heading_size, it.body)
   v(lineskip)
 }
 

@@ -1,6 +1,5 @@
 #import "../packages.typ": *
 #import "../defs.typ": *
-#import components: *
 #import environments: *
 
 = 數域 <chap>
@@ -201,32 +200,32 @@ $
 }
 #let e_plot(n) = calc.pow(1 + 1 / n, n)
 
-#let plt = cetz.canvas({
-  import cetz.draw: *
-  set-style(
-    axes: (stroke: .5pt, tick: (stroke: .5pt)),
-    legend: (
-      stroke: none,
-      orientation: ttb,
-      item: (spacing: .3),
-      scale: 100%,
-    ),
-  )
+// #let plt = cetz.canvas({
+//   import cetz.draw: *
+//   set-style(
+//     axes: (stroke: .5pt, tick: (stroke: .5pt)),
+//     legend: (
+//       stroke: none,
+//       orientation: ttb,
+//       item: (spacing: .3),
+//       scale: 100%,
+//     ),
+//   )
 
-  plot.plot(
-    size: (7, 6),
-    y-min: 1.3,
-    y-max: 3,
-    {
-      let domain = range(1, 21)
-      plot.add(domain.map(it => (it, e_n_plot(it))), label: $e_n$, mark: "o", style: (stroke: none))
-      plot.add(domain.map(it => (it, e_plot(it))), label: $a_n$, mark: "o", style: (stroke: none))
-    },
-  )
-})
+//   plot.plot(
+//     size: (7, 6),
+//     y-min: 1.3,
+//     y-max: 3,
+//     {
+//       let domain = range(1, 21)
+//       plot.add(domain.map(it => (it, e_n_plot(it))), label: $e_n$, mark: "o", style: (stroke: none))
+//       plot.add(domain.map(it => (it, e_plot(it))), label: $a_n$, mark: "o", style: (stroke: none))
+//     },
+//   )
+// })
 #figure(
   caption: [$a_n$ 與 $e_n$ 之收斂圖],
-  plt,
+  box(width: 50%, height: 50pt, fill:  gradient.linear(..color.map.crest)),
 )
 
 再證二者收斂於同處。庶幾以夾逼定理證之，唯需各項 $a_n < e_n < eu$。以上圖料其然也。然理學也非證不信非驗不服。請證之如下。令@eq:an-expand 之 $n -> oo$，左邊收斂於 $eu$ 而 $"右邊" tilde.eq e_n$ 也。故 $e_n < eu$，然則可以[假幣定理]得其證矣。

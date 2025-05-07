@@ -86,13 +86,13 @@
     header: context if not is_starting() and current_chapter() != none {
       marginalia.notecounter.update(0)
       let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
-      let chap_prefix = [
+      let chap_prefix = upper[
         #if chap_idx > 0 {
           semi[Chapter #chap_idx] + [#h(0.5em, weak: true)•#h(0.5em, weak: true)]
         }
         #chap
       ]
-      let sect_prefix = [
+      let sect_prefix = upper[
         #if sect_idx != none and sect_idx > 0 {
           semi[#numbering("1.1", chap_idx, sect_idx)] + h(1em, weak: true)
           sect
@@ -224,7 +224,7 @@
   show heading.where(level: 1): it => {
     _pre_chapter()
     wideblock(
-      standalone_heading(
+      _standalone_heading(
         config: config,
         top_margin: _page_top_margin(page_style),
         it,
@@ -311,7 +311,7 @@
       it.indented(prefix, body),
     )
   }
-  toc_heading(config: config, heading(outlined: false, numbering: none, "Contents", depth: 1))
+  _toc_heading(config: config, heading(outlined: false, numbering: none, "Contents", depth: 1))
   columns(2, [#outline(..args, title: none)#v(1pt)])
   justify_page()
 }
@@ -354,7 +354,7 @@
     _pre_chapter()
     wideblock(
       double: true,
-      fancy_chapter_heading(
+      _fancy_chapter_heading(
         config: config,
         top_margin: _page_top_margin(page_style),
         chap_top_margin: _chap_top_margin,
@@ -384,7 +384,7 @@
     numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()),
   )
   show figure: set block(spacing: _figure_spacing)
-  set figure.caption(position: top, separator: [:])
+  set figure.caption(position: top, separator: sym.space)
   show figure.caption: it => [
     #set text(..note_text_style)
     #set par(..note_par_style)
@@ -449,7 +449,7 @@
     show heading.where(level: 1): it => {
       _pre_chapter()
       wideblock(
-        appendix_heading(
+        _appendix_heading(
           config: config,
           top_margin: _page_top_margin(page_style),
           chap_top_margin: _chap_top_margin,

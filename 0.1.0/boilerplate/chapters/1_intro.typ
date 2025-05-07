@@ -1,6 +1,5 @@
 #import "../packages.typ": *
 #import "../defs.typ": *
-#import components: *
 #import environments: *
 
 = 辯理

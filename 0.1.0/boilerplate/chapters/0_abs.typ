@@ -1,5 +1,4 @@
-#import "../packages.typ": * 
-#show: standalone[序]
+= 序
 
 == 阿拉伯數字
 曰卷, 曰章, 曰款

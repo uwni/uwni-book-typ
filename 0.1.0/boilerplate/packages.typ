@@ -3,21 +3,22 @@
 /// this file is used to import and config packages
 ///
 
-#import "../lib.typ": *
+#import "@local/uwni-book-typ:0.1.0": *
+#import "header_imgs/imgs.typ": imgs
+
 #let (
   isct_thesis,
   titlepage,
-  standalone,
   mainbody,
   appendix,
-  outline
+  outline,
+  subheading,
+  emphblock,
+  subblock,
 ) = config_isct(
   // ["en"|"ja"]
-  config: "zh",
+  config: "en",
   title: (
-    zh: [
-       分析學補遺  
-    ],
     en: [
       Analysis Note
     ],
@@ -32,12 +33,8 @@
   two_sided: true,
   // "modern"|"classic"
   title_style: "book",
+  chap_imgs: imgs,
+  page_style: "top",
 )
 
-//delete this line if you do not need the lorem ipsum for japnese language, as it only for demostration
-#import "@preview/roremu:0.1.0"
-#import "@preview/physica:0.9.4"
-
-#import "@preview/cetz:0.3.4"
-#import "@preview/cetz-plot:0.1.1": plot, chart
 #import "@preview/equate:0.3.0"
