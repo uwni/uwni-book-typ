@@ -12,6 +12,11 @@
   pagebreak(weak: true)
 }
 
+#let preamble(body) = {
+  set page(numbering: "I")
+  body
+}
+
 #let template(
   title,
   author,
@@ -154,7 +159,7 @@
     },
     footer-descent: 30% + 0pt, // default
     header-ascent: 30% + 0pt, // default
-    numbering: "I",
+    numbering: "1",
   )
 
   counter(page).update(1)

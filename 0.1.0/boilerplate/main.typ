@@ -6,8 +6,9 @@
 #show: isct_thesis
 #show math.pi: math.upright
 
-/// make the main text
-#include "chapters/0_abs.typ"
+#preamble[
+  #include "chapters/0_abs.typ"
+]
 
 /// make the abstract
 #outline()
