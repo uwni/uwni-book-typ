@@ -51,7 +51,7 @@
         panic("unknown frame type")
       }
       #heading(if numbered {
-        let num = context {[#current_chapter().index.at(0).] + counter(kind).display()}
+        let num = context { [#current_chapter().index.at(0).] + counter(kind).display() }
         [_ #name ~ #num _ ~ ~ #title]
       } else {
         name + h(.5em) + title
@@ -70,16 +70,18 @@
 )
 
 #let proposition(title: none, body) = environment("proposition", "Proposition", accent-frame, title, body)
-#let proof(body) = {
+#let proof(title: none, body) = {
   let children = body.children
   let last = children.pop()
+  let title = if title != none [(#title)]
+
   let body = if last.func() == math.equation {
-    children.push(last + place(right + bottom, text(_color_palette.accent, _qed_symbol)))
+    title + children.push(last + place(right + bottom, text(_color_palette.accent, _qed_symbol)))
     [].func()(children)
   } else {
-    body + h(1fr) + qed
+    title + body + h(1fr) + text(_color_palette.accent, _qed_symbol)
   }
-  environment("proof", "Proof.", plain-frame, numbered: false, body)
+  environment(numbered: false, "proof", "Proof.", plain-frame, none, body)
 }
 
 #let highlight-eq(body) = {

@@ -174,7 +174,7 @@
   set text(_region) if "_region" in dictionary(config)
 
   /*-- Math Related --*/
-  set math.equation(numbering: (..num) => numbering("(1.1)", counter(heading).get().first(), ..num))
+  set math.equation(numbering: (..num) => numbering("(1.1.a)", counter(heading).get().first(), ..num))
   show math.equation: set text(font: _math_font, weight: _default_weight, features: ("cv01",))
   show math.equation: set block(spacing: _eq_spacing)
   show math.equation: it => {
