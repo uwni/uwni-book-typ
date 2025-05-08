@@ -300,8 +300,9 @@
     ..marginalia.page-setup(..marginaliaconfig),
     //for draft
     background: context if is_starting() {
+      set image(width: 100%)
       place(
-        top,
+        top + center,
         block(
           chap_imgs.at(counter(heading).get().at(0)),
           clip: true,
