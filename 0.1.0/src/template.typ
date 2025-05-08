@@ -28,7 +28,6 @@
   body,
 ) = {
   ///utilities
-
   let sans = text.with(font: _sans_font)
   let italic = if "_italic_font" in dictionary(config) { text.with(font: { _italic_font }) } else { text }
   let semi = text.with(weight: "semibold")
@@ -48,7 +47,7 @@
   let marginaliaconfig = (
     .._page_geo(page_style),
     book: two_sided,
-    numbering: (..i) => super(numbering("1", ..i)),
+    numbering: note-numbering,
   )
 
   marginalia.configure(..marginaliaconfig)
@@ -232,25 +231,6 @@
   }
 
 
-  /* ---- Customization of ref ---- */
-  // show ref: it => {
-  //   let eq = math.equation
-  //   let el = it.element
-  //   if el != none and el.func() == eq {
-  //     // Override equation references.
-  //     link(
-  //       el.location(),
-  //       numbering(
-  //         el.numbering,
-  //         ..counter(eq).at(el.location()),
-  //       ),
-  //     )
-  //   } else {
-  //     // Other references as usual.
-  //     it
-  //   }
-  // }
-
   /*-- emph --*/
   show emph: italic
 
@@ -355,7 +335,9 @@
     gap: 0pt,
     numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()),
   )
-  show figure: set block(spacing: _figure_spacing)
+  show figure.where(kind: image): set block(spacing: _figure_spacing)
+  show figure.where(kind: table): set block(spacing: _figure_spacing)
+
   set figure.caption(position: top, separator: sym.space)
   show figure.caption: it => [
     #set text(..note_text_style)

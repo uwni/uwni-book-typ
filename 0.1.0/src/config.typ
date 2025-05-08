@@ -68,9 +68,10 @@
 #let _page_bottom_margin = 2cm
 #let _page_num_size = 15pt
 #let _page_margin = 15mm
+#let _page_margin_sep = 8mm
 #let _page_geo(page_style) = (
   inner: (far: _page_margin, width: 0mm, sep: 0mm),
-  outer: (far: _page_margin, width: 40mm, sep: 8mm),
+  outer: (far: _page_margin, width: 40mm, sep: _page_margin_sep),
   top: _page_top_margin(page_style),
   bottom: _page_bottom_margin,
   clearance: _main_size,

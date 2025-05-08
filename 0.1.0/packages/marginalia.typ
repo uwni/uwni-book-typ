@@ -22,5 +22,24 @@
   marginalia.note(text-style: note_text_style, par-style: note_par_style, block-style: block-style, ..args)
 }
 
-#let figurenote = marginalia.notefigure.with(text-style: note_text_style, par-style: note_par_style)
+#let notefigure = marginalia.notefigure.with(text-style: note_text_style, par-style: note_par_style)
 #let wideblock = marginalia.wideblock
+
+/// Format note marker
+/// -> content
+#let note-numbering(
+  repeat: true,
+  ..,
+  /// -> int
+  number,
+) = {
+  let markers = marginalia.note-markers
+  let index = if repeat { calc.rem(number - 1, markers.len()) } else { number - 1 }
+  let symbol = if index < markers.len() {
+    markers.at(index)
+  } else {
+    str(index + 1 - markers.len())
+    h(1.5pt)
+  }
+  return text(size: 5pt, style: "normal", fill: _color_palette.accent, symbol)
+}
