@@ -345,6 +345,9 @@
         outline(target: nexth2.before(nexth1), indent: n => (n - 1) * 1em, depth: 2, title: none)
       },
     )
+    // marginalia leaves a blank space here. therefore, we need to
+    // eliminate the space.
+    h(0pt, weak: true)
   }
 
   /* ---- Customization of Table&Image ---- */
