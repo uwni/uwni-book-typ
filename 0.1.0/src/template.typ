@@ -209,7 +209,7 @@
 
   show heading.where(level: 2): it => block(
     below: 1.5em,
-    above: 3em,
+    above: 2em,
     {
       show: wideblock.with(double: true)
       show: block.with(width: 100%, stroke: (top: _color_palette.accent), outset: (y: .5em + 0.5pt))
