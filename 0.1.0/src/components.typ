@@ -80,17 +80,11 @@
 
 #let current_page() = counter(page).display(page.numbering)
 
-#let color_palette = (
-  accent: rgb(85, 117, 137),
-  accent-light: rgb(246, 248, 249),
-  grey: rgb(100, 100, 100),
-  grey-light: rgb(224, 228, 228),
-)
 
 /* Table tools */
-#let heavyrule = table.hline.with(stroke: 0.08em + color_palette.accent)
-#let midrule = table.hline.with(stroke: 0.05em + color_palette.accent)
-#let vline = table.vline(stroke: 0.05em + color_palette.accent)
+#let heavyrule = table.hline.with(stroke: 0.08em + _color_palette.accent)
+#let midrule = table.hline.with(stroke: 0.05em + _color_palette.accent)
+#let vline = table.vline(stroke: 0.05em + _color_palette.accent)
 
 #let multi-row(eq) = {
   block(
@@ -131,13 +125,13 @@
   pagebreak(weak: true)
 
   set par(spacing: lineskip, first-line-indent: 0pt, justify: false)
-  set text(weight: "bold", size: text_size, fill: color_palette.accent)
+  set text(weight: "bold", size: text_size, fill: _color_palette.accent)
   set align(right)
 
   let frame = block.with(
     spacing: text_size,
     width: 100%,
-    stroke: (right: 0.5em + color_palette.accent),
+    stroke: (right: 0.5em + _color_palette.accent),
     outset: (right: -0.25em),
     inset: (right: 1em, y: 0.2em),
   )
@@ -160,7 +154,7 @@
     ] else if lang == "ja" [
       第 #default_num 章
     ] else if lang == "zh" [
-      #set text(fill: color_palette.accent.transparentize(50%))
+      #set text(fill: _color_palette.accent.transparentize(50%))
       第#h(.25em)#text(2em, head_num.display("一"))
     ]
 
@@ -180,7 +174,7 @@
     ] else if lang == "ja" [
       #it.supplement~#default_num
     ] else if lang == "zh" [
-      #set text(fill: color_palette.accent.transparentize(50%))
+      #set text(fill: _color_palette.accent.transparentize(50%))
       #text(luma(50%), appendix_pre)#h(.25em)#default_num
     ]
     let line2 = upper(it.body)
@@ -192,7 +186,7 @@
 #let _heading_text_style(sans_font) = (
   font: sans_font,
   weight: "bold",
-  fill: color_palette.accent,
+  fill: _color_palette.accent,
   tracking: 0.07em,
 )
 
@@ -220,7 +214,7 @@
     dir: ltr,
     spacing: 10pt,
     block(
-      fill: color_palette.accent,
+      fill: _color_palette.accent,
       inset: (x: 10pt),
       outset: (top: chap_top_margin + heading_size, bottom: 10pt),
       default_num,
@@ -238,7 +232,7 @@
   set text(size: heading_size, .._heading_text_style(_sans_font))
   show text: upper
   v(-top_margin)
-  block(fill: color_palette.accent, height: top_margin, spacing: heading_size, hide(it.body))
+  block(fill: _color_palette.accent, height: top_margin, spacing: heading_size, hide(it.body))
   it.body
   v(lineskip)
 }
@@ -254,7 +248,7 @@
   let prefix = text(prefix_size, _appendix.supplement + h(.5em) + counter(heading).display(it.numbering))
   v(-top_margin)
   block(
-    fill: color_palette.accent,
+    fill: _color_palette.accent,
     height: top_margin,
     spacing: heading_size,
     inset: (x: 10pt),

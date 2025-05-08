@@ -79,3 +79,10 @@
 // for the "book" weights of NCM font
 #let _default_weight = 400
 #let _subheading_size = 13pt
+
+#let _color_palette = (
+  accent: rgb(85, 117, 137),
+  accent-light: rgb(246, 248, 249),
+  grey: rgb(100, 100, 100),
+  grey-light: rgb(224, 228, 228),
+)

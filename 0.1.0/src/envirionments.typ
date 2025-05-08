@@ -2,14 +2,17 @@
 #import "config.typ"
 
 #let accent-frame-heading(it) = {
-  set text(font: config._sans_font, weight: 500, tracking: 0.07em, size: config._main_size, fill: color_palette.accent)
+  set text(font: config._sans_font, weight: 500, tracking: 0.07em, size: config._main_size, fill: _color_palette.accent)
   show text: upper
   block(it, spacing: 1em)
 }
 
 #let accent-frame(body) = {
-  show regex("\[\[(.*?)\]\]"): accent-frame-heading
-  block(fill: color_palette.accent-light, width: 100%, inset: 1em, radius: (top-left: 0pt, rest: 1em), body)
+  show heading: it => {
+    if it.level == 1 { panic("accent-frame cannot be used for level 1 headings") }
+    accent-frame-heading(it.body)
+  }
+  block(fill: _color_palette.accent-light, width: 100%, inset: 1em, radius: (top-left: 0pt, rest: 1em), body)
 }
 
 #let dash-frame-heading(it) = {
@@ -19,25 +22,61 @@
 }
 
 #let dash-frame(body) = {
-  show regex("\[\[(.*?)\]\]"): dash-frame-heading
+  show heading: it => {
+    if it.level == 1 { panic("accent-frame cannot be used for level 1 headings") }
+    dash-frame-heading(it.body)
+  }
   block(
-    stroke: (left: (thickness: 1.2pt, paint: color_palette.accent, dash: "densely-dashed")),
+    stroke: (left: (thickness: 1.2pt, paint: _color_palette.accent, dash: "densely-dashed")),
     width: 100%,
     inset: (right: 0pt, rest: 0.75em),
     body,
   )
 }
 
-#let environment(kind, frame, body) = frame[
-  #counter(kind).step()
-  #let heading = if kind == accent-frame {
-    accent-frame-heading
-  } else if kind == dash-frame {
-    dash-frame-heading
+#let plain-frame-heading(it) = {
+  text(style: "italic", it)
+}
+
+#let plain-frame(body) = {
+  show heading: it => {
+    if it.level == 1 { panic("plain-frame cannot be used for level 1 headings") }
+    block(it, spacing: 1em)
   }
-  #heading(kind + h(.5em) + context { [#current_chapter().index.at(0).] + counter(kind).display() })
+  block(width: 100%, body)
+}
+
+#let environment(kind, name, frame, body, numbered: true) = frame[
+  #counter(kind).step()
+  #let heading = if frame == accent-frame {
+    accent-frame-heading
+  } else if frame == dash-frame {
+    dash-frame-heading
+  } else if frame == plain-frame {
+    plain-frame-heading
+  } else {
+    panic("unknown frame type")
+  }
+
+  #heading(if numbered {
+    name + h(.5em) + context { [#current_chapter().index.at(0).] + counter(kind).display() }
+  } else {
+    name + h(.5em)
+  })
   #body
 ]
 
-#let example = environment.with("example", dash-frame)
-#let proposition = environment.with("proposition", accent-frame)
+#let example = environment.with("example", "example", dash-frame)
+#let proposition = environment.with("proposition", "proposition", accent-frame)
+#let proof(body, qed: text(_color_palette.accent, sym.qed)) = {
+  let children = body.children
+  let last = children.pop()
+  let body = if last.func() == math.equation {
+    children.push(last + place(right + bottom, qed))
+    [].func()(children)
+  } else {
+    body + h(1fr) + qed
+  }
+  environment("proof", "Proof.", plain-frame, numbered: false, body)
+}
+

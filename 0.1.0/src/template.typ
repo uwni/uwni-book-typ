@@ -57,7 +57,7 @@
       let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
       let chap_prefix = upper[
         #if chap_idx > 0 {
-          set text(color_palette.accent)
+          set text(_color_palette.accent)
           semi[Chapter#h(.5em)#chap_idx] + [#h(0.5em, weak: true)•#h(0.5em, weak: true)]
         }
         #chap
@@ -207,12 +207,12 @@
     above: 3em,
     {
       show: wideblock.with(double: true)
-      show: block.with(width: 100%, stroke: (top: color_palette.accent), outset: (y: .5em + 0.5pt))
-      set text(_heading2_size, weight: "bold", font: _sans_font, fill: color_palette.accent)
+      show: block.with(width: 100%, stroke: (top: _color_palette.accent), outset: (y: .5em + 0.5pt))
+      set text(_heading2_size, weight: "bold", font: _sans_font, fill: _color_palette.accent)
       box(
         outset: (y: .5em),
         inset: (x: 1em),
-        fill: color_palette.accent,
+        fill: _color_palette.accent,
         text(white, counter(heading).display(it.numbering)),
       )
       h(.5em)
@@ -270,7 +270,7 @@
   marginalia.configure(..outline_marginaliaconfig)
 
   show outline.entry.where(level: 1): it => {
-    set text(font: _sans_font, weight: "bold", fill: color_palette.accent)
+    set text(font: _sans_font, weight: "bold", fill: _color_palette.accent)
     set block(above: 1.25em)
     let prefix = if it.element.numbering == none { none } else if _lang == "zh" {
       it.element.supplement + it.prefix()
