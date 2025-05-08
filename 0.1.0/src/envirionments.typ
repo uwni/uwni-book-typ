@@ -31,7 +31,7 @@
   (width: 100%)
 }
 
-#let environment(kind, name, frame, body, label: none, numbered: true) = {
+#let environment(kind, name, frame, title, body, label: none, numbered: true) = {
   figure(
     kind: kind,
     supplement: name,
@@ -51,17 +51,25 @@
         panic("unknown frame type")
       }
       #heading(if numbered {
-        name + h(.5em) + context { [#current_chapter().index.at(0).] + counter(kind).display() }
+        let num = context {[#current_chapter().index.at(0).] + counter(kind).display()}
+        [_ #name ~ #num _ ~ ~ #title]
       } else {
-        name + h(.5em)
+        name + h(.5em) + title
       })
       #body
     ],
   )
 }
 
-#let example = environment.with("example", "Example", dash-frame)
-#let proposition = environment.with("proposition", "Proposition", accent-frame)
+#let example(title: none, body) = environment(
+  "example",
+  "Example",
+  dash-frame,
+  title,
+  body,
+)
+
+#let proposition(title: none, body) = environment("proposition", "Proposition", accent-frame, title, body)
 #let proof(body) = {
   let children = body.children
   let last = children.pop()
@@ -75,10 +83,11 @@
 }
 
 #let highlight-eq(body) = {
-  set block(
-    // fill: _color_palette.accent-light,
-    stroke: _color_palette.accent,
-    inset: .5em,
-  )
+  // set box(
+  //   // fill: _color_palette.accent-light,
+  //   stroke: _color_palette.accent,
+  //   inset: .5em,
+  // )
+  // TODO: add highlight
   body
 }

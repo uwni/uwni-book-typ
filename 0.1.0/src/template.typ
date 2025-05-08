@@ -174,7 +174,7 @@
   set text(_region) if "_region" in dictionary(config)
 
   /*-- Math Related --*/
-  set math.equation(numbering: num => numbering("(1.1)", counter(heading).get().first(), num))
+  set math.equation(numbering: (..num) => numbering("(1.1)", counter(heading).get().first(), ..num))
   show math.equation: set text(font: _math_font, weight: _default_weight, features: ("cv01",))
   show math.equation: set block(spacing: _eq_spacing)
   show math.equation: it => {
@@ -188,6 +188,9 @@
       h(0.25em, weak: true) + it + h(0.25em, weak: true)
     }
   }
+  set math.cases(gap: _lineskip)
+
+
   // set paragraph style
   set par(leading: _lineskip, spacing: _parskip, first-line-indent: 1em, justify: true)
   show raw: set text(font: _mono_font, weight: "regular")
@@ -229,8 +232,6 @@
     set text(weight: 600, font: _sans_font, fill: black, tracking: 0.07em)
     upper(it.body)
   }
-
-
   /*-- emph --*/
   show emph: italic
 
