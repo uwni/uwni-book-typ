@@ -1,7 +1,7 @@
 #import "components.typ": *
 #import "../packages/marginalia.typ": *
-#import "config.typ" as _config
-#import _config: *
+#import "config.typ" as config
+#import config: *
 
 /// text properties for the main body
 #let _pre_chapter() = {
@@ -25,7 +25,7 @@
   ///utilities
 
   let sans = text.with(font: _sans_font)
-  let italic = if "_italic_font" in dictionary(_config) { text.with(font: { _italic_font }) } else { text }
+  let italic = if "_italic_font" in dictionary(config) { text.with(font: { _italic_font }) } else { text }
   let semi = text.with(weight: "semibold")
 
   /// Set the document's basic properties.
@@ -40,18 +40,18 @@
   }
 
   set document(title: title.en, author: author_en, date: date)
-  let marginalia_config = (
+  let marginaliaconfig = (
     .._page_geo(page_style),
     book: two_sided,
     numbering: (..i) => super(numbering("1", ..i)),
   )
 
-  marginalia.configure(..marginalia_config)
+  marginalia.configure(..marginaliaconfig)
 
   set page(
     // explicitly set the paper
     paper: "a4",
-    ..marginalia.page-setup(..marginalia_config),
+    ..marginalia.page-setup(..marginaliaconfig),
     header: context if not is_starting() and current_chapter() != none {
       marginalia.notecounter.update(0)
       let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
@@ -167,7 +167,7 @@
     lang: _lang,
   )
 
-  set text(_region) if "_region" in dictionary(_config)
+  set text(_region) if "_region" in dictionary(config)
 
   /*-- Math Related --*/
   set math.equation(numbering: num => numbering("(1.1)", counter(heading).get().first(), num))
@@ -191,7 +191,7 @@
   set heading(numbering: "1.1")
   set heading(supplement: it => if it.depth == 1 [Chapter] else [Section]) if _lang == "en"
   set heading(supplement: "章") if _lang == "ja"
-  set heading(supplement: config.chapter) if _lang == "zh"
+  set heading(supplement: _chapter) if _lang == "zh"
   show heading.where(level: 1): it => {
     _pre_chapter()
     wideblock(
@@ -257,22 +257,22 @@
   body
 }
 
-#let _outline(config, ..args) = {
+#let _outline(..args) = {
   set outline(indent: auto, depth: 2)
-  set outline(title: config.toc) if "toc" in config
-  let outline_marginalia_config = (
+  set outline(title: _toc) if "toc" in dictionary(config)
+  let outline_marginaliaconfig = (
     inner: (far: _page_margin, width: 0mm, sep: 8mm),
     outer: (far: _page_margin, width: 0mm, sep: 8mm),
     // book: two_sided,
   )
-  set page(..marginalia.page-setup(..outline_marginalia_config), header: none)
+  set page(..marginalia.page-setup(..outline_marginaliaconfig), header: none)
   set par(leading: 1em, spacing: 0.5em)
-  marginalia.configure(..outline_marginalia_config)
+  marginalia.configure(..outline_marginaliaconfig)
 
   show outline.entry.where(level: 1): it => {
-    set text(font: config.sans_font, weight: "bold", fill: color_palette.accent)
+    set text(font: _sans_font, weight: "bold", fill: color_palette.accent)
     set block(above: 1.25em)
-    let prefix = if it.element.numbering == none { none } else if config.lang == "zh" {
+    let prefix = if it.element.numbering == none { none } else if _lang == "zh" {
       it.element.supplement + it.prefix()
     }
     let body = upper(it.body() + h(1fr) + it.page())
@@ -281,7 +281,7 @@
       it.indented(prefix, body),
     )
   }
-  _toc_heading(config: config, heading(outlined: false, numbering: none, "Table of Contents", depth: 1))
+  _toc_heading(heading(outlined: false, numbering: none, "Table of Contents", depth: 1))
   columns(2, [#outline(..args, title: none)#v(1pt)])
   justify_page()
 }
@@ -289,15 +289,15 @@
 #let mainbody(body, two_sided, page_style, chap_imgs) = {
   let sans = text.with(font: _sans_font)
 
-  let marginalia_config = (
+  let marginaliaconfig = (
     .._page_geo(page_style),
     book: two_sided,
   )
 
-  marginalia.configure(..marginalia_config)
+  marginalia.configure(..marginaliaconfig)
 
   set page(
-    ..marginalia.page-setup(..marginalia_config),
+    ..marginalia.page-setup(..marginaliaconfig),
     //for draft
     background: context if is_starting() {
       place(
@@ -367,7 +367,7 @@
     set figure(gap: 0pt)
 
     show figure.caption.where(position: top): it => context {
-      let height = measure(width: marginalia_config.outer.width, block(it)).height
+      let height = measure(width: marginaliaconfig.outer.width, block(it)).height
       note(
         numbered: false,
         dy: if overheight { 0pt } else { f_height - height },
@@ -382,10 +382,10 @@
 
   set table(stroke: none, align: horizon + center)
   show figure.where(kind: table): set figure(supplement: _i18n.table) if (
-    "_i18n" in dictionary(_config) and "table" in _i18n
+    "_i18n" in dictionary(config) and "table" in _i18n
   )
   show figure.where(kind: image): set figure(supplement: _i18n.figure) if (
-    "_i18n" in dictionary(_config) and "figure" in _i18n
+    "_i18n" in dictionary(config) and "figure" in _i18n
   )
 
   // reset the counter for the main body
@@ -428,10 +428,10 @@
   }
 }
 
-#let subheading(config, body) = {
+#let subheading(body) = {
   set par(leading: 0.5em)
   v(0pt, weak: true)
-  block(text(font: config.sans_font, _subheading_size, style: "italic", weight: 500, black, body))
+  block(text(font: _sans_font, _subheading_size, style: "italic", weight: 500, black, body))
   v(_lineskip)
 }
 

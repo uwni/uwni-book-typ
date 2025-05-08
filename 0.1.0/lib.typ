@@ -3,6 +3,10 @@
 
 // re-export the following modules
 #import "src/components.typ": *
+#import "src/template.typ": *
+#import "src/titlepage.typ": titlepage
+#import "src/envirionments.typ": *
+#import "src/components.typ": *
 
 #let config_isct(
   config: "en",
@@ -16,11 +20,6 @@
   title_style: "[title_style]",
   chap_imgs: (),
 ) = {
-  import "src/template.typ": *
-  import "src/titlepage.typ": titlepage
-  import "src/envirionments.typ": *
-  import "src/components.typ": *
-
   // export the following functions
   (
     isct_thesis: body => template(
@@ -49,3 +48,4 @@
 // reexport
 #import "packages/marginalia.typ": *
 #import "src/envirionments.typ": *
+#let outline = _outline

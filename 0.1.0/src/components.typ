@@ -1,4 +1,5 @@
 #import "config.typ": *
+#import "config.typ" as config
 
 #let watermark(
   body,
@@ -199,7 +200,7 @@
   let heading_size = 36pt
   let lineskip = 0.8 * heading_size
   set par(first-line-indent: 0pt, justify: false, leading: lineskip)
-  set text(size: heading_size, .._heading_text_style(config.sans_font))
+  set text(size: heading_size, .._heading_text_style(_sans_font))
   show text: upper
   it.body
   v(lineskip)
@@ -262,6 +263,4 @@
   h(10pt) + text(heading_size, it.body)
   v(lineskip)
 }
-
-
 

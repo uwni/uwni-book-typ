@@ -2,7 +2,7 @@
 #import "config.typ"
 
 #let emphblock_heading(it) = {
-  set text(font: config.sans_font, weight: 500, tracking: 0.07em, size: config._main_size, fill: color_palette.accent)
+  set text(font: config._sans_font, weight: 500, tracking: 0.07em, size: config._main_size, fill: color_palette.accent)
   show text: upper
   block(it, spacing: 1em)
 }
