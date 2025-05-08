@@ -68,11 +68,11 @@
 
 #let example = environment.with("example", "example", dash-frame)
 #let proposition = environment.with("proposition", "proposition", accent-frame)
-#let proof(body, qed: text(_color_palette.accent, sym.qed)) = {
+#let proof(body) = {
   let children = body.children
   let last = children.pop()
   let body = if last.func() == math.equation {
-    children.push(last + place(right + bottom, qed))
+    children.push(last + place(right + bottom, text(_color_palette.accent, _qed_symbol)))
     [].func()(children)
   } else {
     body + h(1fr) + qed

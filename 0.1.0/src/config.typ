@@ -86,3 +86,4 @@
   grey: rgb(100, 100, 100),
   grey-light: rgb(224, 228, 228),
 )
+#let _qed_symbol = [□]
