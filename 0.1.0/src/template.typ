@@ -18,6 +18,13 @@
   body
 }
 
+#let page-number() = context {
+  align(
+    if is_even_page() { left } else { right },
+    text(_page_num_size, font: _sans_font, weight: "semibold", current_page()),
+  )
+}
+
 #let template(
   title,
   author,
@@ -147,14 +154,10 @@
     footer: context if is_starting() {
       let leftm = marginalia.get-left()
       let rightm = marginalia.get-right()
-      let page = sans(_page_num_size, semi(current_page()))
 
       wideblock(
         double: true,
-        align(
-          if is_even_page() { left } else { right },
-          page,
-        ),
+        page-number(),
       )
     },
     footer-descent: 30% + 0pt, // default
@@ -426,7 +429,11 @@
 
 #let make-index(group: "default", columns: 3) = {
   justify_page()
-  set page(margin: (top: _page_top_margin("top"), x: _page_margin + _page_margin_sep), header: none)
+  set page(
+    margin: (top: _page_top_margin("top"), x: _page_margin + _page_margin_sep),
+    header: none,
+    footer: page-number(),
+  )
   heading(depth: 1)[index]
   show: std.columns.with(columns)
   use-symbol-list(
