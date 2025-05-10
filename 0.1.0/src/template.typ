@@ -1,5 +1,6 @@
 #import "components.typ": *
 #import "../packages/marginalia.typ": *
+#import "index.typ": use-symbol-list
 #import "config.typ" as config
 #import config: *
 
@@ -175,7 +176,7 @@
 
   /*-- Math Related --*/
   set math.equation(numbering: (..num) => numbering("(1.1.a)", counter(heading).get().first(), ..num))
-  show math.equation: set text(font: _math_font, weight: _default_weight, features: ("cv01",))
+  show math.equation: set text(font: (_math_font, .._serif_font), weight: _default_weight, features: ("cv01",))
   show math.equation: set block(spacing: _eq_spacing)
   show math.equation: it => {
     if it.block {
@@ -234,6 +235,7 @@
   }
   /*-- emph --*/
   show emph: italic
+  show strong: set text(_color_palette.accent)
 
   show "。": "．"
   show "，": "、"
@@ -246,14 +248,9 @@
 #let _outline(..args) = {
   set outline(indent: auto, depth: 2)
   set outline(title: _toc) if "toc" in dictionary(config)
-  let outline_marginaliaconfig = (
-    inner: (far: _page_margin, width: 0mm, sep: 8mm),
-    outer: (far: _page_margin, width: 0mm, sep: 8mm),
-    // book: two_sided,
-  )
-  set page(..marginalia.page-setup(..outline_marginaliaconfig), header: none)
+
+  set page(margin: (top: _page_top_margin("top"), x: _page_margin + _page_margin_sep), header: none)
   set par(leading: 1em, spacing: 0.5em)
-  marginalia.configure(..outline_marginaliaconfig)
 
   show outline.entry.where(level: 1): it => {
     set text(font: _sans_font, weight: "bold", fill: _color_palette.accent)
@@ -427,3 +424,41 @@
   v(_lineskip)
 }
 
+#let make-index(group: "default", columns: 3) = {
+  justify_page()
+  set page(margin: (top: _page_top_margin("top"), x: _page_margin + _page_margin_sep), header: none)
+  heading(depth: 1)[index]
+  show: std.columns.with(columns)
+  use-symbol-list(
+    group,
+    it => {
+      for (id, entries) in it {
+        heading(
+          level: 3,
+          depth: 1,
+          numbering: none,
+          id,
+        )
+        for entry in entries {
+          let (symbol, children, min_page, max_page) = entry
+          let _entry = if children.len() == 1 {
+            let (detail, page_num, loc) = children.at(0)
+            link(loc)[#symbol #h(1fr) #page_num]
+          } else {
+            let page_range = if min_page == max_page {
+              min_page
+            } else {
+              [#min_page - #max_page]
+            }
+            block[#symbol #h(1fr) #page_range]
+            for child in children {
+              let (detail, page_num, loc) = child
+              block(link(loc)[#h(1em) #detail #h(1fr) #page_num])
+            }
+          }
+          block(_entry)
+        }
+      }
+    },
+  )
+}

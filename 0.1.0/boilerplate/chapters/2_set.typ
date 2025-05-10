@@ -52,7 +52,7 @@ $
 $
   (exists x dr y in [a dr b]) gcd(x, y) = 1
 $
-*約式*，或曰*最簡分式*，分式之子母互素者也。例如 $1\/1$，$2\/3$，$5\/8$。以其子母皆最小，立爲 $QQ\/=$ 之代表元也。稠性: $a $
+*約式*，或曰*最簡分式*，分式之子母互素者也。例如 $1\/1$，$2\/3$，$5\/8$。以其子母皆最小，立爲 $QQ\/=$ 之代表元也。稠性: $a$
 
 == 實數論
 請問，正方形之對角線長 $l$ 幾何? 以勾股定理知 $l^2 = 2$，擬其長以一分數之約式 $l = p\/q$
@@ -79,14 +79,10 @@ $
 
 由全序關係之三歧性知
 + 若 $macron(x)^2 = 2$: 證偽
-+ 若 $macron(x)^2 > 2$，需證明 $ exists y in QQ2, y < macron(x)$，設 $y = macron(x) - epsilon$，並使 $y^2 > 2$。即 $y$ 爲上界而甚小耳。 $
-    (macron(x) - epsilon)^2 >= 2 <=> macron(x)^2 - 2 macron(x) epsilon + epsilon^2 > 2 arrow.l.double macron(x)^2 - 2 macron(x) epsilon >= 2 <=> epsilon <= (macron(x)^2 - 2) / (2 macron(x))
-  $
-  不妨取 $epsilon = (macron(x)^2 - 2)/(2 macron(x))$，即證所求
-+ 若 $macron(x)^2 < 2$，需證明 $ exists y in QQ2, y > macron(x)$，設 $y = macron(x) + epsilon$。即 $macron(x)$ 乃非上界耳。 $
-    y^2 = (macron(x) + epsilon)^2 <= 2 <=> macron(x)^2 + 2 macron(x) epsilon + epsilon^2 < 2 arrow.l.double macron(x)^2 + 2 macron(x) epsilon <= 2 <=> epsilon <= (2 - macron(x)^2) / (2 macron(x))
-  $
-  不妨取 $epsilon = (2 - macron(x)^2)/(2 macron(x))$，即證所求
++ 若 $macron(x)^2 > 2$，需證明 $exists y in QQ2, y < macron(x)$，設 $y = macron(x) - epsilon$，並使 $y^2 > 2$。即 $y$ 爲上界而甚小耳。 $ (macron(x) - epsilon)^2 >= 2 <=> macron(x)^2 - 2 macron(x) epsilon + epsilon^2 > 2 arrow.l.double macron(x)^2 - 2 macron(x) epsilon >= 2 <=> epsilon <= (macron(x)^2 - 2) / (2 macron(x)) $
+  不妨取 $epsilon = (macron(x)^2 - 2) / (2 macron(x))$，即證所求
++ 若 $macron(x)^2 < 2$，需證明 $exists y in QQ2, y > macron(x)$，設 $y = macron(x) + epsilon$。即 $macron(x)$ 乃非上界耳。 $ y^2 = (macron(x) + epsilon)^2 <= 2 <=> macron(x)^2 + 2 macron(x) epsilon + epsilon^2 < 2 arrow.l.double macron(x)^2 + 2 macron(x) epsilon <= 2 <=> epsilon <= (2 - macron(x)^2) / (2 macron(x)) $
+  不妨取 $epsilon = (2 - macron(x)^2) / (2 macron(x))$，即證所求
 
 故知 $QQ2$ 上確界之不存也。
 
@@ -169,14 +165,14 @@ $
   = sum_(k=0)^n n^(underline(k)) / (k! n^k)
 $
 
-$n^(underline(k)) / (k! n^k)  >0$ ，則知 $a_n$ 之嚴格遞增矣。再展開之
+$n^(underline(k)) / (k! n^k) >0$ ，則知 $a_n$ 之嚴格遞增矣。再展開之
 
 $
   a_n &= sum_(k=0)^n 1 / k! n / n (n-1) / n dots.c (n-k+1) / n \
   &= sum_(k=0)^n 1 / k! (1 - 1 / n) dots.c (1 - (k-1) / n) \
 $<eq:an-expand>
 
-茲定義曰 $e_n := sum_(k=0)^n 1\/k!$ ，逐項比較即知 $ a_n < e_n$
+茲定義曰 $e_n := sum_(k=0)^n 1\/k!$ ，逐項比較即知 $a_n < e_n$
 
 由 $(forall k >= 1) thick 1\/k! <= 1\/2^(k-1)$
 $
@@ -185,7 +181,7 @@ $
   &<= 1 + 1 + 1 / 2 + 1 / (2 times 2) + dots.c + 1 / (2^(n-1))\
   &<= 3
 $
-抑由 $ (forall k >= 2) quad 1/k! <= 1/k(k-1) = 1/(k-1) - 1/(k) $
+抑由 $ (forall k >= 2) quad 1 / k! <= 1 / k(k-1) = 1 / (k-1) - 1 / (k) $
 亦得所求證。由定義可知 $sup a_n = eu$ 也。
 法前例亦可得證 $e_n$ 之收斂。然 $lim_(n->oo) e_n eq.quest eu$ 之真僞猶未可辨，不得臆斷。然則不妨先列圖以觀
 
@@ -224,7 +220,7 @@ $
 // })
 #figure(
   caption: [$a_n$ 與 $e_n$ 之收斂圖],
-  box(width: 50%, height: 50pt, fill:  gradient.linear(..color.map.crest)),
+  box(width: 50%, height: 50pt, fill: gradient.linear(..color.map.crest)),
 )
 
 再證二者收斂於同處。庶幾以夾逼定理證之，唯需各項 $a_n < e_n < eu$。以上圖料其然也。然理學也非證不信非驗不服。請證之如下。令@eq:an-expand 之 $n -> oo$，左邊收斂於 $eu$ 而 $"右邊" tilde.eq e_n$ 也。故 $e_n < eu$，然則可以[假幣定理]得其證矣。
@@ -265,7 +261,7 @@ $
 $
 審其斂散，法以比值
 $
-  abs(x^(n+1) / (n+1)!) / abs(x^n / n!) = abs(x/ (n+1)) -> 0 "as" n -> oo
+  abs(x^(n+1) / (n+1)!) / abs(x^n / n!) = abs(x / (n+1)) -> 0 "as" n -> oo
 $
 
 === 調和級數
@@ -274,7 +270,7 @@ $
 === 收斂最慢的級數
 
 == 差分方程論
-請問線性微分方程如 $y'' + y = 0$ 者當作何解？得特徵方程 $r^2 + 1 = 0$ 有根 $r = plus.minus i$ 故知通解爲 $y = c_1 cos x + c_2 sin x$。代入即明此誠爲其解也。此*全解*耶? 請論其理。
+請問線性微分方程如 $y'' + y = 0$ 者當作何解？得特徵方程 $r^2 + 1 = 0$ 有根 $r = plus.minus i$ 故知通解爲 $y = c_1 cos x + c_2 sin x$。代入即明此誠爲其解也。此*#index[全解]*耶? 請論其理。
 定義數列 ${x_n}$ 之*前向差分算子*曰
 $ Delta x_n = x_(n+1) - x_(n) $
 而*逆向差分算子*曰
@@ -283,12 +279,12 @@ $n >= 0$ 階差分遞歸定義曰
 
 $
   Delta^n = cases(
-  I &"if" n = 0,
-  Delta compose Delta^(n-1) quad &  "if" n > 0,
-)
+    I &"if" n = 0,
+    Delta compose Delta^(n-1) quad & "if" n > 0,
+  )
 $
 
-因 $ Delta (a x_n + b y_n) =  a Delta x_n + b Delta y_n$，可知 $Delta$ 爲線性算子。又以 $I$ 之線性。知 $Delta^n$ 亦線性也。
+因 $Delta (a x_n + b y_n) = a Delta x_n + b Delta y_n$，可知 $Delta$ 爲線性#index(detail: "linear")[算子]。又以 $I$ 之線性。知 $Delta^n$ 亦線性也。
 稱形如
 $ sum_(k=0)^n a_k Delta^k x_k = b $
 之方程式曰 $n$ *階常係數差分方程*。特稱 $b = 0$ 者爲*齊次*，否則爲*非齊次*。若有一列數 $hat(x)_n$ 可令 $x_n = hat(x)_n$ 滿足方程，則稱 $hat(x)_n$ 爲方程之*解*。
@@ -308,35 +304,37 @@ std.debug.print("Hello, {}!\n", .{"world"});
 ```
 
 == Tables
-#(figure(
-  caption: [Truth Table for 2-to-4 Decoder],
-  {
-    table(
-      columns: (1fr, 1fr, 1fr, 1fr, 1fr, 1fr),
-      column-gutter: 0.5em,
-      // stroke: (_, y) => if y == 1 { (bottom: 0.5pt) },
-      heavyrule(),
-      table.header(
-        table.cell(colspan: 2, smallcaps[*Input*]),
-        table.cell(colspan: 4, smallcaps[*Output*]),
-      ),
-      midrule(end: 2), midrule(start: 2, end: 6),
-      $A$, $B$, $Y_0$, $Y_1$, $Y_2$, $Y_3$,
-      midrule(),
-      $0$, $0$, $1$, $0$, $0$, $0$,
-      $0$, $1$, $0$, $1$, $0$, $0$,
-      $1$, $0$, $0$, $0$, $1$, $0$,
-      $1$, $1$, $0$, $0$, $0$, $1$,
-      heavyrule(),
-    )
-  },
-))
+#(
+  figure(
+    caption: [Truth Table for 2-to-4 Decoder],
+    {
+      table(
+        columns: (1fr, 1fr, 1fr, 1fr, 1fr, 1fr),
+        column-gutter: 0.5em,
+        // stroke: (_, y) => if y == 1 { (bottom: 0.5pt) },
+        heavyrule(),
+        table.header(
+          table.cell(colspan: 2, smallcaps[*Input*]),
+          table.cell(colspan: 4, smallcaps[*Output*]),
+        ),
+        midrule(end: 2), midrule(start: 2, end: 6),
+        $A$, $B$, $Y_0$, $Y_1$, $Y_2$, $Y_3$,
+        midrule(),
+        $0$, $0$, $1$, $0$, $0$, $0$,
+        $0$, $1$, $0$, $1$, $0$, $0$,
+        $1$, $0$, $0$, $0$, $1$, $0$,
+        $1$, $1$, $0$, $0$, $0$, $1$,
+        heavyrule(),
+      )
+    },
+  )
+)
 
 
 You use the `#figure` directive to include figures in your document. Here is an example:
 
 #let mean(arg) = $ lr(angle.l #arg angle.r) $
-$ mean(x/y) $
+$ mean(x / y) $
 
 ```typ
 #figure(
@@ -354,7 +352,7 @@ which will be rendered as:
 
 get-
 
-
+#index(detail: "測試")[算子]
 
 = 實分析
 

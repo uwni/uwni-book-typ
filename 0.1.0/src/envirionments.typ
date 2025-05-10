@@ -70,16 +70,20 @@
 )
 
 #let proposition(title: none, body) = environment("proposition", "Proposition", accent-frame, title, body)
-#let proof(title: none, body) = {
-  let children = body.children
-  let last = children.pop()
-  let title = if title != none [(#title)]
+#let definition(title: none, body) = environment("definition", "Definition", accent-frame, title, body)
 
-  let body = if last.func() == math.equation {
-    title + children.push(last + place(right + bottom, text(_color_palette.accent, _qed_symbol)))
-    [].func()(children)
-  } else {
+#let proof(title: none, body) = {
+  let title = if title != none [(#title)]
+  let body = {
     title + body + h(1fr) + text(_color_palette.accent, _qed_symbol)
+  }
+  if "children" in body.fields() {
+    let children = body.children
+    let last = children.pop()
+    if last.func() == math.equation {
+      body = title + children.push(last + place(right + bottom, text(_color_palette.accent, _qed_symbol)))
+      [].func()(children)
+    }
   }
   environment(numbered: false, "proof", "Proof.", plain-frame, none, body)
 }

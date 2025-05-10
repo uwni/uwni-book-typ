@@ -1,4 +1,5 @@
-#import "../packages.typ": marginalia // import package
+#import "@preview/marginalia:0.1.4"
+
 #import "../src/components.typ": is_even_page, _color_palette // import component
 
 #let note_text_style = (size: 0.8 * 11pt, style: "normal", weight: "regular")

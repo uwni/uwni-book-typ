@@ -48,4 +48,5 @@
 // reexport
 #import "packages/marginalia.typ": *
 #import "src/envirionments.typ": *
+#import "src/index.typ": index
 #let outline = _outline
