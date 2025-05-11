@@ -16,7 +16,6 @@
   date: datetime.today(),
   draft: false,
   two_sided: false,
-  page_style: "side",
   title_style: "[title_style]",
   chap_imgs: (),
 ) = {
@@ -28,7 +27,6 @@
       date,
       draft,
       two_sided,
-      page_style,
       chap_imgs,
       body,
     ),
@@ -40,8 +38,8 @@
       date,
       draft,
     ),
-    appendix: appendix.with(page_style),
-    mainbody: body => mainbody(body, two_sided, page_style, chap_imgs),
+    appendix: appendix,
+    mainbody: body => mainbody(body, two_sided, chap_imgs),
   )
 }
 

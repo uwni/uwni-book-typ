@@ -64,15 +64,15 @@
 #let _heading1_size = 24pt
 #let _heading2_size = 15pt
 #let _heading3_size = 1.2 * _main_size
-#let _page_top_margin(page_style) = if page_style == "top" { 20mm } else { 16mm } + _main_size
+#let _page_top_margin = 20mm + _main_size
 #let _page_bottom_margin = 2cm
 #let _page_num_size = 15pt
 #let _page_margin = 15mm
 #let _page_margin_sep = 8mm
-#let _page_geo(page_style) = (
+#let _page_geo = (
   inner: (far: _page_margin, width: 0mm, sep: 0mm),
   outer: (far: _page_margin, width: 40mm, sep: _page_margin_sep),
-  top: _page_top_margin(page_style),
+  top: _page_top_margin,
   bottom: _page_bottom_margin,
   clearance: _main_size,
 )

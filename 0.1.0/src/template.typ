@@ -1,6 +1,6 @@
 #import "components.typ": *
 #import "../packages/marginalia.typ": *
-#import "index.typ": use-symbol-list
+#import "index.typ": use_symbol_list
 #import "config.typ" as config
 #import config: *
 
@@ -18,11 +18,14 @@
   body
 }
 
-#let page-number() = context {
-  align(
-    if is_even_page() { left } else { right },
-    text(_page_num_size, font: _sans_font, weight: "semibold", current_page()),
-  )
+#let page-number(offset: 0pt) = context {
+  let number = text(_page_num_size, font: _sans_font, weight: "semibold", current_page())
+
+  if is_even_page() [
+    #h(-offset)#number#h(1fr)
+  ] else [
+    #h(1fr)#number#h(-offset)
+  ]
 }
 
 #let template(
@@ -31,7 +34,6 @@
   date,
   draft,
   two_sided,
-  page_style,
   chap_imgs,
   body,
 ) = {
@@ -53,7 +55,7 @@
 
   set document(title: title.en, author: author_en, date: date)
   let marginaliaconfig = (
-    .._page_geo(page_style),
+    .._page_geo,
     book: two_sided,
     numbering: note-numbering,
   )
@@ -90,66 +92,33 @@
       set align(x_alignmnent)
       set text(font: _sans_font)
 
-      if page_style == "top" {
-        let leftm = marginalia.get-left()
-        let rightm = marginalia.get-right()
-        let page_num = semi(_page_num_size, current_page())
+      let leftm = marginalia.get-left()
+      let rightm = marginalia.get-right()
+      let page_num = semi(_page_num_size, current_page())
 
-        wideblock(
-          double: true,
-          {
-            box(
-              width: leftm.width,
-              if book_left [
-                #page_num
-              ],
-            )
-            h(leftm.sep)
-            box(
-              width: 1fr,
-              text(_main_size, if book_left { chap_prefix } else { sect_prefix }),
-            )
-            h(rightm.sep)
-            box(
-              width: rightm.width,
-              if not book_left {
-                page_num
-              },
-            )
-          },
-        )
-      } else {
-        place(
-          top,
-          dy: _page_top_margin(page_style),
-          marginalia.note(
-            numbered: false,
-            shift: false,
-            text-style: note_text_style,
-            par-style: note_par_style,
-            context {
-              let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
-              let book_left = book and is_even_page()
-              set align(if book_left {
-                left
-              } else {
-                right
-              })
-              stack(
-                spacing: 5pt,
-                semi(_page_num_size, current_page()),
-                line(
-                  length: 100%,
-                  stroke: 1pt,
-                ),
-                if book_left [#chap] else if sect_idx != none and sect_idx > 0 [
-                  #text(_main_size)[#numbering("1.1", chap_idx, sect_idx)#sect]
-                ],
-              )
+      wideblock(
+        double: true,
+        {
+          box(
+            width: leftm.width,
+            if book_left [
+              #page_num
+            ],
+          )
+          h(leftm.sep)
+          box(
+            width: 1fr,
+            text(_main_size, if book_left { chap_prefix } else { sect_prefix }),
+          )
+          h(rightm.sep)
+          box(
+            width: rightm.width,
+            if not book_left {
+              page_num
             },
-          ),
-        )
-      }
+          )
+        },
+      )
     },
     footer: context if is_starting() {
       let leftm = marginalia.get-left()
@@ -207,7 +176,7 @@
     _pre_chapter()
     wideblock(
       _standalone_heading(
-        top_margin: _page_top_margin(page_style),
+        top_margin: _page_top_margin,
         it,
       ),
     )
@@ -252,7 +221,12 @@
   set outline(indent: auto, depth: 2)
   set outline(title: _toc) if "toc" in dictionary(config)
 
-  set page(margin: (top: _page_top_margin("top"), x: _page_margin + _page_margin_sep), header: none)
+  set page(
+    margin: (top: _page_top_margin, x: _page_margin + _page_margin_sep),
+    header: none,
+    footer: page-number(offset: _page_margin_sep),
+    numbering: "I",
+  )
   set par(leading: 1em, spacing: 0.5em)
 
   show outline.entry.where(level: 1): it => {
@@ -272,11 +246,11 @@
   justify_page()
 }
 
-#let mainbody(body, two_sided, page_style, chap_imgs) = {
+#let mainbody(body, two_sided, chap_imgs) = {
   let sans = text.with(font: _sans_font)
 
   let marginaliaconfig = (
-    .._page_geo(page_style),
+    .._page_geo,
     book: two_sided,
   )
 
@@ -306,7 +280,7 @@
     wideblock(
       double: true,
       _fancy_chapter_heading(
-        top_margin: _page_top_margin(page_style),
+        top_margin: _page_top_margin,
         chap_top_margin: _chap_top_margin,
         it,
       ),
@@ -388,7 +362,7 @@
 
 
 // TODO: specify the appendix heading
-#let appendix(page_style, body) = {
+#let appendix(body) = {
   justify_page()
 
   let (supplement, numbering: _numbering) = _appendix
@@ -409,7 +383,7 @@
       _pre_chapter()
       wideblock(
         _appendix_heading(
-          top_margin: _page_top_margin(page_style),
+          top_margin: _page_top_margin,
           chap_top_margin: _chap_top_margin,
           it,
         ),
@@ -427,16 +401,16 @@
   v(_lineskip)
 }
 
-#let make-index(group: "default", columns: 3) = {
+#let make_index(group: "default", columns: 3) = {
   justify_page()
   set page(
-    margin: (top: _page_top_margin("top"), x: _page_margin + _page_margin_sep),
+    margin: (top: _page_top_margin, x: _page_margin + _page_margin_sep),
     header: none,
-    footer: page-number(),
+    footer: page-number(offset: _page_margin_sep),
   )
   heading(depth: 1)[index]
   show: std.columns.with(columns)
-  use-symbol-list(
+  use_symbol_list(
     group,
     it => {
       for (id, entries) in it {

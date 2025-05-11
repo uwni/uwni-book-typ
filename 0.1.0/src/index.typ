@@ -11,7 +11,7 @@
   symbol
 }
 
-#let to-string(it) = {
+#let to_string(it) = {
   if it == none {
     none
   } else if type(it) == str {
@@ -21,9 +21,9 @@
   } else if it.has("text") {
     it.text
   } else if it.has("children") {
-    it.children.map(to-string).join()
+    it.children.map(to_string).join()
   } else if it.has("body") {
-    to-string(it.body)
+    to_string(it.body)
   } else if it == [ ] {
     " "
   }
@@ -40,7 +40,7 @@
   }
 }
 
-#let use-symbol-list(group, id_func: first_letter, fn) = context {
+#let use_symbol_list(group, id_func: first_letter, fn) = context {
   let group = if type(group) == str {
     (group,)
   } else if type(group) == array {
@@ -61,7 +61,7 @@
 
   for (group: _group, symbol, detail, loc) in _amlos_dict
     .get()
-    .sorted(key: it => (to-string(it.symbol), to-string(it.detail))) {
+    .sorted(key: it => (to_string(it.symbol), to_string(it.detail))) {
     // filter the symbol by group
     if not group.contains(_group) { continue }
     let int_page_num = counter(page).at(loc).at(0)

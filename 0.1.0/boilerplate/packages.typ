@@ -30,7 +30,6 @@
   // "modern"|"classic"
   title_style: "book",
   chap_imgs: imgs,
-  page_style: "top",
 )
 
 #import "@preview/equate:0.3.0"

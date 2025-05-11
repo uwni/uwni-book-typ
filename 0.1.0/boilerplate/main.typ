@@ -29,4 +29,4 @@
 #include "misc/lop.typ"
 #include "misc/ref.typ"
 
-#make-index()
+#make_index()

@@ -112,6 +112,7 @@
   )
 }
 
+/// todo: fancy pattern
 #let justify_page() = {
   set page(header: none, footer: none)
   pagebreak(to: "odd", weak: true)
