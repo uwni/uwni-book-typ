@@ -29,12 +29,22 @@
 
 #let _amlos_dict = state("amlos-dict", ())
 
-#let index(group: "default", word, keep: false, modifier: none) = context {
+/// strict: if true, same word in different form/case/style will be treated as different word
+/// keepform: if true, the word will be kept in its original form for some proper nouns like "iPhone"
+///  or symbols
+#let index(group: "default", word, strict: false, keepform: false, modifier: none) = context {
   if type(group) != str {
     panic("group must be a string")
   }
   // the index of amlos-dict give a unique cat to the word
-  let record = (group: group, key: lower(to_string(word)), word: word, keep: keep, modifier: modifier, loc: here())
+  let record = (
+    group: group,
+    key: if strict { word } else { lower(to_string(word)) },
+    word: word,
+    keepform: keepform,
+    modifier: modifier,
+    loc: here(),
+  )
   _amlos_dict.update(old => old + (record,))
 
   word
@@ -59,7 +69,7 @@
 
   let queried = _amlos_dict.get().filter(it => it.group in group).sorted(key: it => (it.key, to_string(it.modifier)))
 
-  for (key, keep, word, modifier, loc) in queried {
+  for (key, keepform, word, modifier, loc) in queried {
     // filter the word by group
     let int_page_num = counter(page).at(loc).at(0)
     let page_num = if loc.page-numbering() == none {
@@ -76,7 +86,7 @@
     if not cat in res or res.at(cat).last().key != key {
       let record = (
         key: key,
-        word: if keep { word } else { lower(word) },
+        word: if keepform { word } else { lower(word) },
         children: (
           (
             modifier: modifier,
