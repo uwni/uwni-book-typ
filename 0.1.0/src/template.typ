@@ -1,6 +1,6 @@
 #import "components.typ": *
 #import "../packages/marginalia.typ": *
-#import "index.typ": use_symbol_list
+#import "index.typ": use_word_list
 #import "config.typ" as config
 #import config: *
 
@@ -401,7 +401,7 @@
   v(_lineskip)
 }
 
-#let make_index(group: "default", columns: 3) = {
+#let make_index(group: "default", indent: 1em, separator: [, ], columns: 3) = {
   justify_page()
   set page(
     margin: (top: _page_top_margin, x: _page_margin + _page_margin_sep),
@@ -410,7 +410,7 @@
   )
   heading(depth: 1)[index]
   show: std.columns.with(columns)
-  use_symbol_list(
+  use_word_list(
     group,
     it => {
       for (id, entries) in it {
@@ -421,20 +421,20 @@
           id,
         )
         for entry in entries {
-          let (symbol, children, min_page, max_page) = entry
+          let (word, children, min_page, max_page) = entry
           let _entry = if children.len() == 1 {
-            let (detail, page_num, loc) = children.at(0)
-            link(loc)[#symbol #h(1fr) #page_num]
+            let (modifier, loc) = children.at(0)
+            block[#word#separator#loc.join(",")]
           } else {
             let page_range = if min_page == max_page {
               min_page
             } else {
-              [#min_page - #max_page]
+              [#min_page\-#max_page]
             }
-            block[#symbol #h(1fr) #page_range]
+            block[#word#separator#page_range]
             for child in children {
-              let (detail, page_num, loc) = child
-              block(link(loc)[#h(1em) #detail #h(1fr) #page_num])
+              let (modifier, loc) = child
+              block[#h(indent)#modifier#separator#loc.join(",")]
             }
           }
           block(_entry)

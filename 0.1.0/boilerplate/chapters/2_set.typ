@@ -84,7 +84,7 @@ $
 + 若 $macron(x)^2 < 2$，需證明 $exists y in QQ2, y > macron(x)$，設 $y = macron(x) + epsilon$。即 $macron(x)$ 乃非上界耳。 $ y^2 = (macron(x) + epsilon)^2 <= 2 <=> macron(x)^2 + 2 macron(x) epsilon + epsilon^2 < 2 arrow.l.double macron(x)^2 + 2 macron(x) epsilon <= 2 <=> epsilon <= (2 - macron(x)^2) / (2 macron(x)) $
   不妨取 $epsilon = (2 - macron(x)^2) / (2 macron(x))$，即證所求
 
-故知 $QQ2$ 上確界之不存也。
+故知 $QQ2$ #index[上確界]之不存也。
 
 二例。#let QQ4 = $QQ_(<2)$
 $
@@ -270,7 +270,7 @@ $
 === 收斂最慢的級數
 
 == 差分方程論
-請問線性微分方程如 $y'' + y = 0$ 者當作何解？得特徵方程 $r^2 + 1 = 0$ 有根 $r = plus.minus i$ 故知通解爲 $y = c_1 cos x + c_2 sin x$。代入即明此誠爲其解也。此*#index[全解]*耶? 請論其理。
+請問線性微分方程如 $y'' + y = 0$ 者當作何解？得特徵方程 $r^2 + 1 = 0$ 有根 $r = plus.minus i$ 故知通解爲 $y = c_1 cos x + c_2 sin x$。代入即明此誠爲其解也。此*全解*耶? 請論其理。
 定義數列 ${x_n}$ 之*前向差分算子*曰
 $ Delta x_n = x_(n+1) - x_(n) $
 而*逆向差分算子*曰
@@ -284,7 +284,7 @@ $
   )
 $
 
-因 $Delta (a x_n + b y_n) = a Delta x_n + b Delta y_n$，可知 $Delta$ 爲線性#index(detail: "linear")[算子]。又以 $I$ 之線性。知 $Delta^n$ 亦線性也。
+因 $Delta (a x_n + b y_n) = a Delta x_n + b Delta y_n$，可知 $Delta$ 爲線性#index(modifier: "線性")[算子]。又以 $I$ 之線性。知 $Delta^n$ 亦線性也。
 稱形如
 $ sum_(k=0)^n a_k Delta^k x_k = b $
 之方程式曰 $n$ *階常係數差分方程*。特稱 $b = 0$ 者爲*齊次*，否則爲*非齊次*。若有一列數 $hat(x)_n$ 可令 $x_n = hat(x)_n$ 滿足方程，則稱 $hat(x)_n$ 爲方程之*解*。
@@ -352,10 +352,11 @@ which will be rendered as:
 
 get-
 
-#index(detail: "測試")[算子]
+#index(modifier: "測試")[算子]
 
 = 實分析
 
 = 複分析
 
 = 諧分析
+#index(modifier: "測試")[算子]

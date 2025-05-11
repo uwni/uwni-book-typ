@@ -1,14 +1,14 @@
 #let _amlos_dict = state("amlos-dict", ())
 
-#let index(group: "default", symbol, detail: none) = context {
+#let index(group: "default", word, modifier: none) = context {
   if type(group) != str {
     panic("group must be a string")
   }
-  // the index of amlos-dict give a unique id to the symbol
-  let record = (group: group, symbol: symbol, detail: detail, loc: here())
+  // the index of amlos-dict give a unique cat to the word
+  let record = (group: group, word: word, modifier: modifier, loc: here())
   _amlos_dict.update(old => old + (record,))
 
-  symbol
+  word
 }
 
 #let to_string(it) = {
@@ -40,7 +40,8 @@
   }
 }
 
-#let use_symbol_list(group, id_func: first_letter, fn) = context {
+
+#let use_word_list(group, cat_func: first_letter, fn) = context {
   let group = if type(group) == str {
     (group,)
   } else if type(group) == array {
@@ -48,22 +49,21 @@
   } else {
     panic("group must be a string or an array of string")
   }
-  // no symbol definition found
 
   let res = (:)
-  let curr_symbol = none
-  let curr_children = ()
-  let curr_int_min_page = none
-  let curr_int_max_page = none
-  let curr_min_page = none
-  let curr_max_page = none
-  let curr_id = none
+  let last_page = none
+  let max_page = none
+  let min_page = none
+  let max_page_loc = none
+  let min_page_loc = none
 
-  for (group: _group, symbol, detail, loc) in _amlos_dict
+  let queried = _amlos_dict
     .get()
-    .sorted(key: it => (to_string(it.symbol), to_string(it.detail))) {
-    // filter the symbol by group
-    if not group.contains(_group) { continue }
+    .filter(it => it.group in group)
+    .sorted(key: it => (to_string(it.word), to_string(it.modifier)))
+
+  for (word, modifier, loc) in queried {
+    // filter the word by group
     let int_page_num = counter(page).at(loc).at(0)
     let page_num = if loc.page-numbering() == none {
       int_page_num
@@ -71,62 +71,52 @@
       numbering(loc.page-numbering(), int_page_num)
     }
 
-    if curr_symbol == none {
-      curr_symbol = symbol
-      curr_int_min_page = int_page_num
-      curr_int_max_page = int_page_num
-      curr_min_page = page_num
-      curr_max_page = page_num
-    }
+    let linked_page_num = link(loc, page_num)
+    let cat = cat_func(word)
 
-    if curr_symbol != symbol {
-      res.insert(
-        curr_id,
-        (
-          ..res.at(curr_id, default: ()),
+    // if the word is not in the result, we need to add a new record
+    // if the word is in the result, we need to check if it is a new word
+    if not cat in res or res.at(cat).last().word != word {
+      let record = (
+        word: word,
+        children: (
           (
-            symbol: curr_symbol,
-            children: curr_children,
-            min_page: curr_min_page,
-            max_page: curr_max_page,
+            modifier: modifier,
+            loc: (linked_page_num,),
           ),
         ),
       )
-      curr_symbol = symbol
-      curr_children = ()
+      res.insert(cat, (..res.at(cat, default: ()), record))
+      max_page = int_page_num
+      min_page = int_page_num
+      min_page_loc = linked_page_num
+      max_page_loc = linked_page_num
+    } else if res.at(cat).last().children.last().modifier != modifier {
+      // if the modifier is different, we need to add a new record
+      res.at(cat).last().children.push((modifier: modifier, loc: (linked_page_num,)))
+    } else if last_page != int_page_num {
+      // for same word and same modifier, but different page
+      res.at(cat).last().children.last().loc.push(linked_page_num)
     }
 
-    curr_id = id_func(symbol)
 
-    curr_children.push((detail: detail, page_num: page_num, loc: loc))
-    (curr_int_min_page, curr_min_page) = if curr_int_min_page < int_page_num {
-      (curr_int_min_page, curr_min_page)
+    res.at(cat).last().min_page = if min_page < int_page_num {
+      min_page_loc
     } else {
-      (int_page_num, page_num)
+      min_page = int_page_num
+      min_page_loc = linked_page_num
+      linked_page_num
     }
 
-    (curr_int_max_page, curr_max_page) = if curr_int_max_page > int_page_num {
-      (curr_int_max_page, curr_max_page)
+    res.at(cat).last().max_page = if max_page > int_page_num {
+      max_page_loc
     } else {
-      (int_page_num, page_num)
+      max_page = int_page_num
+      max_page_loc = linked_page_num
+      linked_page_num
     }
-  }
 
-  if curr_symbol != none {
-    res.insert(
-      curr_id,
-      (
-        ..res.at(curr_id, default: ()),
-        (
-          symbol: curr_symbol,
-          children: curr_children,
-          min_page: curr_min_page,
-          max_page: curr_max_page,
-        ),
-      ),
-    )
-  } else {
-    return
+    last_page = int_page_num
   }
 
   fn(res)
