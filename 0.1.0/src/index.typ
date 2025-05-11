@@ -1,16 +1,3 @@
-#let _amlos_dict = state("amlos-dict", ())
-
-#let index(group: "default", word, modifier: none) = context {
-  if type(group) != str {
-    panic("group must be a string")
-  }
-  // the index of amlos-dict give a unique cat to the word
-  let record = (group: group, word: word, modifier: modifier, loc: here())
-  _amlos_dict.update(old => old + (record,))
-
-  word
-}
-
 #let to_string(it) = {
   if it == none {
     none
@@ -32,12 +19,25 @@
 // first letter
 #let first_letter(it) = {
   if type(it) == str {
-    it.at(0)
+    lower(it.at(0))
   } else if it.has("text") {
-    it.text.at(0)
+    lower(it.text.at(0))
   } else {
     panic("it must be a string or an array of string")
   }
+}
+
+#let _amlos_dict = state("amlos-dict", ())
+
+#let index(group: "default", word, keep: false, modifier: none) = context {
+  if type(group) != str {
+    panic("group must be a string")
+  }
+  // the index of amlos-dict give a unique cat to the word
+  let record = (group: group, key: lower(to_string(word)), word: word, keep: keep, modifier: modifier, loc: here())
+  _amlos_dict.update(old => old + (record,))
+
+  word
 }
 
 
@@ -57,12 +57,9 @@
   let max_page_loc = none
   let min_page_loc = none
 
-  let queried = _amlos_dict
-    .get()
-    .filter(it => it.group in group)
-    .sorted(key: it => (to_string(it.word), to_string(it.modifier)))
+  let queried = _amlos_dict.get().filter(it => it.group in group).sorted(key: it => (it.key, to_string(it.modifier)))
 
-  for (word, modifier, loc) in queried {
+  for (key, keep, word, modifier, loc) in queried {
     // filter the word by group
     let int_page_num = counter(page).at(loc).at(0)
     let page_num = if loc.page-numbering() == none {
@@ -76,9 +73,10 @@
 
     // if the word is not in the result, we need to add a new record
     // if the word is in the result, we need to check if it is a new word
-    if not cat in res or lower(res.at(cat).last().word) != lower(word) {
+    if not cat in res or res.at(cat).last().key != key {
       let record = (
-        word: word,
+        key: key,
+        word: if keep { word } else { lower(word) },
         children: (
           (
             modifier: modifier,
