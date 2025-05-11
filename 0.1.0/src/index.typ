@@ -76,7 +76,7 @@
 
     // if the word is not in the result, we need to add a new record
     // if the word is in the result, we need to check if it is a new word
-    if not cat in res or res.at(cat).last().word != word {
+    if not cat in res or lower(res.at(cat).last().word) != lower(word) {
       let record = (
         word: word,
         children: (
@@ -91,7 +91,7 @@
       min_page = int_page_num
       min_page_loc = linked_page_num
       max_page_loc = linked_page_num
-    } else if res.at(cat).last().children.last().modifier != modifier {
+    } else if lower(res.at(cat).last().children.last().modifier) != lower(modifier) {
       // if the modifier is different, we need to add a new record
       res.at(cat).last().children.push((modifier: modifier, loc: (linked_page_num,)))
     } else if last_page != int_page_num {
