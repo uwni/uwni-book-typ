@@ -422,10 +422,7 @@
         )
         for entry in entries {
           let (word, children, min_page, max_page) = entry
-          let _entry = if children.len() == 1 {
-            let (modifier, loc) = children.at(0)
-            block[#word#separator#loc.join(",")]
-          } else {
+          let _entry = {
             let page_range = if min_page == max_page {
               min_page
             } else {
@@ -434,6 +431,7 @@
             block[#word#separator#page_range]
             for child in children {
               let (modifier, loc) = child
+              if modifier == none { continue }
               block[#h(indent)#modifier#separator#loc.join(",")]
             }
           }

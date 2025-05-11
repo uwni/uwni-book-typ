@@ -360,3 +360,4 @@ get-
 
 = 諧分析
 #index(modifier: "測試")[算子]
+#index(modifier: "text")[content]
