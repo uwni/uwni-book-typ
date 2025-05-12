@@ -52,7 +52,7 @@
       }
       #heading(if numbered {
         let num = context { [#current_chapter().index.at(0).] + counter(kind).display() }
-        [_ #name ~ #num _ ~ ~ #title]
+        [#name#h(.5em) #num #h(.5em) #title]
       } else {
         name + h(.5em) + title
       })

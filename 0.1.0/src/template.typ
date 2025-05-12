@@ -207,7 +207,7 @@
   }
   /*-- emph --*/
   show emph: italic
-  show strong: set text(_color_palette.accent)
+  // show strong: set text(_color_palette.accent)
 
   show "。": "．"
   show "，": "、"
