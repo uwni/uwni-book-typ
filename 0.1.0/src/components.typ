@@ -204,16 +204,16 @@
 #let _fancy_chapter_heading(top_margin: 0pt, chap_top_margin: 0pt, it) = {
   let heading_size = 26pt
   let lineskip = 0.7 * heading_size
-  set par(leading: lineskip)
+  set par(leading: lineskip, justify: false)
   set text(size: heading_size, .._heading_text_style(_sans_font))
 
   let head_num = counter(heading)
   let default_num = text(white, head_num.display(it.numbering))
 
   v(-top_margin + chap_top_margin + heading_size)
-  stack(
-    dir: ltr,
-    spacing: 10pt,
+  grid(
+    columns: 2,
+    column-gutter: 10pt,
     block(
       fill: _color_palette.accent,
       inset: (x: 10pt),
@@ -222,7 +222,6 @@
     ),
     upper(it.body),
   )
-
   v(lineskip)
 }
 

@@ -2,6 +2,14 @@
 #import "config.typ"
 #import "../packages/marginalia.typ": * // import package
 
+// #let red-frame-heading(it) = {
+//   set text(font: config._sans_font, weight: 500, tracking: 0.07em, size: config._main_size, fill: _color_palette.red)
+//   show text: upper
+//   block(it, spacing: 1em)
+// }
+
+// #let red-frame = (fill: _color_palette.red-light, width: 100%, inset: 1em, radius: (top-left: 0pt, rest: 1em))
+
 #let accent-frame-heading(it) = {
   set text(font: config._sans_font, weight: 500, tracking: 0.07em, size: config._main_size, fill: _color_palette.accent)
   show text: upper
@@ -47,12 +55,14 @@
         dash-frame-heading
       } else if frame == plain-frame {
         plain-frame-heading
+      } else if frame == red-frame {
+        red-frame-heading
       } else {
         panic("unknown frame type")
       }
       #heading(if numbered {
         let num = context { [#current_chapter().index.at(0).] + counter(kind).display() }
-        [#name#h(.5em) #num #h(.5em) #title]
+        [#name#h(.3em) #num #h(.5em) #title]
       } else {
         name + h(.5em) + title
       })

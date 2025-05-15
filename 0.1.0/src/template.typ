@@ -4,6 +4,14 @@
 #import "config.typ" as config
 #import config: *
 
+#let _page_geo = (
+  inner: (far: _page_margin, width: 0mm, sep: 0mm),
+  outer: (far: _page_margin, width: _page_margin_note_width, sep: _page_margin_sep),
+  top: _page_top_margin,
+  bottom: _page_bottom_margin,
+  clearance: _main_size,
+)
+
 /// text properties for the main body
 #let _pre_chapter() = {
   counter(math.equation).update(0)
@@ -148,7 +156,7 @@
 
   /*-- Math Related --*/
   set math.equation(numbering: (..num) => numbering("(1.1.a)", counter(heading).get().first(), ..num))
-  show math.equation: set text(font: (_math_font, .._serif_font), weight: _default_weight, features: ("cv01",))
+  show math.equation: set text(font: (_math_font, .._serif_font), weight: _default_weight)
   show math.equation: set block(spacing: _eq_spacing)
   show math.equation: it => {
     if it.block {
@@ -185,16 +193,12 @@
   show heading.where(level: 2): it => block(
     below: 1.5em,
     above: 2em,
+    width: 100%,
+    outset: (top: .5em),
+    stroke: (top: _color_palette.accent),
     {
-      show: wideblock.with(double: true)
-      show: block.with(width: 100%, stroke: (top: _color_palette.accent), outset: (y: .5em + 0.5pt))
       set text(_heading2_size, weight: "bold", font: _sans_font, fill: _color_palette.accent)
-      box(
-        outset: (y: .5em),
-        inset: (x: 1em),
-        fill: _color_palette.accent,
-        text(white, counter(heading).display(it.numbering)),
-      )
+      text(counter(heading).display(it.numbering))
       h(.5em)
       it.body
     },
@@ -243,10 +247,11 @@
   }
   _toc_heading(heading(outlined: false, numbering: none, "Table of Contents", depth: 1))
   columns(2, [#outline(..args, title: none)#v(1pt)])
-  justify_page()
 }
 
 #let mainbody(body, two_sided, chap_imgs) = {
+  // make sure the page is start at right 
+  justify_page()
   let sans = text.with(font: _sans_font)
 
   let marginaliaconfig = (
