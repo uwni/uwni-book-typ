@@ -18,6 +18,18 @@ $R$ 二元謂語也，$phi$ 公式也，$x$ 變元也，$a$ 變元若常符也�
 
 #lorem(400)
 
+#proposition[
+  #lorem(70)
+]
+
+// #proof[
+//   #lorem(40)
+// ]
+
+// #example[
+//   #lorem(40)
+// ]
+
 == ZFC 公理
 // #emphblock[
 //   dsfaf
@@ -25,9 +37,9 @@ $R$ 二元謂語也，$phi$ 公式也，$x$ 變元也，$a$ 變元若常符也�
 // ]
 
 == 交集
-$
+#highlighteq($
   A union B = {x | x in A or x in B}
-$
+$)
 
 == 商集
 
@@ -102,7 +114,7 @@ $
   id_S := {(s, s) | s in S}
 $
 例如 $S = {suit.club.stroked, suit.diamond.stroked, suit.heart.stroked}$，$id_S = {(suit.club.stroked, suit.club.stroked), (suit.diamond.stroked, suit.diamond.stroked), (suit.heart.stroked, suit.heart.stroked)}$
-
+ #context _env_state.get()
 === 偏序關係
 設以并關係集 $(S, prec.eq)$，並有
 / 自反性: $(forall s in S) s prec.eq s$

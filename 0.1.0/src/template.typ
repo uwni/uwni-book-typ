@@ -1,7 +1,8 @@
 #import "components.typ": *
-#import "../packages/marginalia.typ": *
+#import "packages/marginalia.typ": *
 #import "index.typ": use_word_list
 #import "config.typ" as config
+#import "envirionments.typ": _reset_env_counting, _env_state
 #import config: *
 
 #let _page_geo = (
@@ -18,6 +19,7 @@
   counter(figure.where(kind: table)).update(0)
   counter(figure.where(kind: image)).update(0)
   counter(figure.where(kind: raw)).update(0)
+  _reset_env_counting()
   pagebreak(weak: true)
 }
 
@@ -79,8 +81,7 @@
       let (index: (chap_idx, sect_idx), body: (chap, sect)) = current_chapter()
       let chap_prefix = upper[
         #if chap_idx > 0 {
-          set text(_color_palette.accent)
-          semi[Chapter#h(.5em)#chap_idx] + [#h(0.5em, weak: true)•#h(0.5em, weak: true)]
+          semi[#chap_idx #h(1em, weak: true)]
         }
         #chap
       ]
@@ -156,7 +157,7 @@
 
   /*-- Math Related --*/
   set math.equation(numbering: (..num) => numbering("(1.1.a)", counter(heading).get().first(), ..num))
-  show math.equation: set text(font: (_math_font, .._serif_font), weight: _default_weight)
+  show math.equation: set text(font: (_math_font, .._serif_font), weight: _math_weight)
   show math.equation: set block(spacing: _eq_spacing)
   show math.equation: it => {
     if it.block {
@@ -166,7 +167,7 @@
       ]
       eq
     } else {
-      h(0.25em, weak: true) + it + h(0.25em, weak: true)
+      it
     }
   }
   set math.cases(gap: _lineskip)
@@ -175,6 +176,8 @@
   // set paragraph style
   set par(leading: _lineskip, spacing: _parskip, first-line-indent: 1em, justify: true)
   show raw: set text(font: _mono_font, weight: "regular")
+
+  show figure.caption: set text(font: _caption_font) if "_caption_font" in dictionary(config)
 
   set heading(numbering: "1.1")
   set heading(supplement: it => if it.depth == 1 [Chapter] else [Section]) if _lang == "en"
@@ -191,11 +194,8 @@
   }
 
   show heading.where(level: 2): it => block(
-    below: 1.5em,
-    above: 2em,
+    spacing: 1.5em,
     width: 100%,
-    outset: (top: .5em),
-    stroke: (top: _color_palette.accent),
     {
       set text(_heading2_size, weight: "bold", font: _sans_font, fill: _color_palette.accent)
       text(counter(heading).display(it.numbering))
@@ -250,7 +250,7 @@
 }
 
 #let mainbody(body, two_sided, chap_imgs) = {
-  // make sure the page is start at right 
+  // make sure the page is start at right
   justify_page()
   let sans = text.with(font: _sans_font)
 
@@ -315,8 +315,8 @@
     gap: 0pt,
     numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()),
   )
-  show figure.where(kind: image): set block(spacing: _figure_spacing)
-  show figure.where(kind: table): set block(spacing: _figure_spacing)
+  show figure.where(kind: image): set block(spacing: _figure_spacing, breakable: false)
+  show figure.where(kind: table): set block(spacing: _figure_spacing, breakable: false)
 
   set figure.caption(position: top, separator: sym.space)
   show figure.caption: it => [

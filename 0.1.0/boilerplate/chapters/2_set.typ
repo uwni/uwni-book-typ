@@ -117,6 +117,10 @@ $
 
 === 夾逼定理
 
+// #proposition()[
+//   th
+// ]
+
 === 極限之代數運算
 極限之加減乘除是也。設以 $lim_(n -> oo) a_n = L$，$lim_(n -> oo) b_n = M$，由定義知 $forall epsilon > 0$
 
@@ -256,9 +260,9 @@ $b_n\/b_(n-1) < 1$ 也。而 $b_n$ 之嚴格遞減可知矣。故 $inf b_n = eu$
 === 指數函數
 
 定義 $exp$ 函數曰
-$
+#highlighteq($
   exp x = sum_(n=0)^oo x^n / n!
-$
+$)
 審其斂散，法以比值
 $
   abs(x^(n+1) / (n+1)!) / abs(x^n / n!) = abs(x / (n+1)) -> 0 "as" n -> oo
@@ -361,3 +365,4 @@ get-
 = 諧分析
 #index(modifier: "測試")[算子]
 #index(modifier: "text")[content]
+

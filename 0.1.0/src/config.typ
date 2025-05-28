@@ -2,14 +2,19 @@
 #let _appendix = (supplement: "Appendix", numbering: "A.1")
 #let _title_font = ("Barlow", "尙古黑體SC")
 #let _sans_font = ("Barlow", "尙古黑體SC")
-#let _serif_font = ("Libertinus Serif", "尙古明體SC")
-#let _math_font = "TeX Gyre Pagella Math"
+#let _serif_font = ("Minion 3", "尙古明體SC", "Noto Color Emoji")
+#let _caption_font = ("Minion 3 Caption", "尙古明體SC")
+#let _subheading_font = ("Minion 3 Subhead", "尙古明體SC")
+#let _math_font = "New Computer Modern Math"
 #let _mono_font = "IBM Plex Mono"
+#let _symbol_font = "Wingdings"
 #let _draft = "draft"
 #let _date_format = "[month repr:long] [year]"
 #let _proof = [_Proof._]
 #let _main_size = 11pt
+#let _math_weight = 460
 #let _lineskip = 0.75em
+#let _envskip = 1.2em
 #let _parskip = _lineskip //1.2em
 #let _eq_spacing = 1em
 #let _figure_spacing = 1.5em
@@ -28,11 +33,11 @@
 #let _subheading_size = 13pt
 
 #let _color_palette = (
-  // accent: rgb(189, 28, 62),
-  // accent-light: rgb(252, 245, 245),
-  accent: rgb(85, 117, 137),
-  accent-light: rgb(246, 248, 249),
+  accent: rgb(189, 28, 62),
+  accent-light: rgb(252, 245, 245),
+  // accent: rgb(85, 117, 137),
+  // accent-light: rgb(246, 248, 249),
   grey: rgb(100, 100, 100),
   grey-light: rgb(224, 228, 228),
 )
-#let _qed_symbol = [□]
+#let _qed_symbol = text(font: _math_font)[□]

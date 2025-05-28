@@ -20,8 +20,8 @@
 ]
 
 #appendix[
-  #include "appendices/data.typ"
-  #include "appendices/proof.typ"
+  // #include "appendices/data.typ"
+  // #include "appendices/proof.typ"
 ]
 
 #justify_page()
